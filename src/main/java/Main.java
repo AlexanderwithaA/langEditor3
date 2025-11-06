@@ -1,7 +1,20 @@
+import org.jline.terminal.Terminal;
+import org.jline.utils.Signals;
+
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        new TerminalHandler().createOutPutWindow();
+        TerminalHandler terminal  = new TerminalHandler();
+        terminal.createOutPutWindow();
+        terminal.testOutPut();
+
+//        Object handle = Signals.register("INT", () -> {
+//            System.out.println("Caught SIGINT");
+//            // Perform cleanup
+//        });
+
+
+
     }
 }
