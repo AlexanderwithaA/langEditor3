@@ -8,6 +8,7 @@ public class Main {
         TerminalHandler terminal  = new TerminalHandler();
         terminal.createOutPutWindow();
         terminal.testOutPut();
+        terminal.inputPrompt();
 
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");
