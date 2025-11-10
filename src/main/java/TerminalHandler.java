@@ -1,9 +1,12 @@
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
 import org.jline.utils.InfoCmp;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -12,14 +15,14 @@ public class TerminalHandler {
 
     static Terminal terminal;
     static PrintWriter writer;
-    static Reader reader;
     static int terminalRows;
     static int terminalColumns;
+    static LineReader reader;
 
     public static void createOutPutWindow() throws IOException {
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         writer = terminal.writer();
-        reader = terminal.reader();
+        reader = LineReaderBuilder.builder().terminal(terminal).build();
         terminalRows = terminal.getSize().getColumns();
         terminalColumns = terminal.getSize().getRows();
 
@@ -59,10 +62,18 @@ public class TerminalHandler {
         writer.flush();
     }
 
-    public void inputPrompt() {
-        writer.println("Give location to a .LANG type file or a folder containing such files:");
+    public void inputPrompt() throws IOException {
+        writer.println("Input filepath of a .LANG formatted file or a folder containing such files. Type \"Done\" to complete file input.");
+        writer.println("Path or directory: ");
         writer.flush();
-        while(reader != )
+        String input = reader.readLine();
+        while(input.equalsIgnoreCase("done") || input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+            Main.langFileAccessor.populateCollection(input);
+            writer.println("Input filepath of a .LANG formatted file or a folder containing such files. Type \"Done\" to complete file input.");
+            writer.print("Path or directory: ");
+            writer.flush();
+            input = reader.readLine();
+        }
     }
 
 

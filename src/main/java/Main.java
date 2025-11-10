@@ -4,6 +4,9 @@ import org.jline.utils.Signals;
 import java.io.IOException;
 
 public class Main {
+
+    static LangFileCollection langFileAccessor = new LangFileCollection();
+
     public static void main(String[] args) throws IOException {
         TerminalHandler terminal  = new TerminalHandler();
         terminal.createOutPutWindow();
