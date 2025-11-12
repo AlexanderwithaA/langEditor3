@@ -2,6 +2,7 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.Signals;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
 
@@ -9,9 +10,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         TerminalHandler terminal  = new TerminalHandler();
-        terminal.createOutPutWindow();
-        terminal.testOutPut();
+        terminal.initialize();
         terminal.inputPrompt();
+        terminal.clearScreen();
+        terminal.fileSelect();
 
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");

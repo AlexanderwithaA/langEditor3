@@ -27,8 +27,8 @@ public class LangFileCollection {
                 if(file.getName().substring(file.getName().lastIndexOf(".") + 1).equals("lang")) {
                     insertFile(file);
                 } else {
-                    System.out.println("Man...\nwhat's this piece of junk? This " + file.getName() + "???\nGet that junk outta here! I DON'T LIKE "
-                            + file.getName().substring(file.getName().lastIndexOf(".") + 1) + "'s!");
+//                    System.out.println("Man...\nwhat's this piece of junk? This " + file.getName() + "???\nGet that junk outta here! I DON'T LIKE "
+//                            + file.getName().substring(file.getName().lastIndexOf(".") + 1) + "'s!");
                 }
             } else if (file.isDirectory()) {
                 File[] directoryListing = file.listFiles();

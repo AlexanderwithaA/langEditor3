@@ -19,7 +19,7 @@
 //
 //        //System.out.println(temp.getSubKey(""));
 //
-//        new TerminalHandler().createOutPutWindow();
+//        new TerminalHandler().initialize();
 //
 //    }
 //}
