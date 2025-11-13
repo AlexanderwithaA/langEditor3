@@ -5,6 +5,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
 import org.jline.utils.InfoCmp;
+import org.jline.utils.InfoCmp.Capability;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import java.io.PrintWriter;
 public class TerminalHandler {
 
     LangFileCollection langFileAccessor = Main.langFileAccessor;
+    LangFile loadedFile;
 
     static Terminal terminal;
     static PrintWriter writer;
@@ -58,13 +60,24 @@ public class TerminalHandler {
 //        writer.flush();
     }
 
+//    private static  readEnforcement(String prompt, int expectedType) {
+//        if(expectedType == -1) {
+//            return reader.readLine(prompt);
+//        } if(expectedType == 0) {
+//
+//        } if(expectedType == 1) {
+//
+//        }
+//    }
+
     public void clearScreen() {
         terminal.puts(InfoCmp.Capability.clear_screen);
         writer.flush();
     }
 
-    public void inputPrompt() throws IOException {
+    public void inputPrompt() {
         String prompt = "Path or directory: ";
+
         writer.println("Input filepath of a .LANG formatted file or a folder containing such files. Type \"Done\" to complete file input.");
         writer.flush();
         String input = reader.readLine(prompt);
@@ -79,16 +92,39 @@ public class TerminalHandler {
     }
 
     public void fileSelect() {
-        int i = 1;
-        for(; i <= langFileAccessor.getFileNames().length; i++) {
+        int i = 0;
+        int input;
+        for(; i < langFileAccessor.getFileNames().length; i++) {
             writer.println(i + ") " + langFileAccessor.getFileNames()[i]);
         }
         writer.println();
-        writer.println("Enter Between " + 1 + " and " + i + " to load a file.");
         writer.flush();
+        try {
+            input = Integer.parseInt(reader.readLine("Enter a number between " + 0 + " and " + (i - 1) + " to load a file: "));
+        } catch(NumberFormatException e) {
+            clearScreen();
+            terminal.puts(Capability.cursor_address, 8, 0);
+            writer.println("Must be an integer!");
+            terminal.puts(Capability.cursor_address, 0, 0);
+            writer.flush();
+            fileSelect();
+            return;
+        }
+        if(input < 0 || input > i) {
+            clearScreen();
+            terminal.puts(Capability.cursor_address, 8, 0);
+            writer.println("Must be within range!");
+            terminal.puts(Capability.cursor_address, 0, 0);
+            writer.flush();
+            fileSelect();
+            return;
+        }
+        System.out.println("Shit");
+        loadedFile = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
     }
 
-    public void editor() {
+//    public void editor() {
+//
+//    }
 
-    }
 }
