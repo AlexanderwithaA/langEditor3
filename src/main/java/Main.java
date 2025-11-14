@@ -15,7 +15,6 @@ public class Main {
         terminal.clearScreen();
         terminal.fileSelect();
 
-
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");
 //            // Perform cleanup

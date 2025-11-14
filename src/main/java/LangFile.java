@@ -55,6 +55,13 @@ public class LangFile {
         }
     }
 
+    public String[] getInitialValue() {
+        if (!fileTreeMap.isEmpty()) {
+            return fileTreeMap.firstEntry().toString().split("=", 2);
+        }
+        return new String[] {null,null};
+    }
+
     // next two methods return null if they try to read off the end of the filetreemap.
     public String[] nextKeyValue(String from) {
         if (fileTreeMap.containsKey(from) && fileTreeMap.higherEntry(from) != null) {

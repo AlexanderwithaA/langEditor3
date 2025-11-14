@@ -4,11 +4,15 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
+import org.jline.utils.AttributedString;
+import org.jline.utils.Display;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;
-
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TerminalHandler {
 
@@ -21,6 +25,8 @@ public class TerminalHandler {
     static int terminalColumns;
     static LineReader reader;
     static DefaultParser parser;
+
+    static List<AttributedString> screenBuffer = new ArrayList<>();
 
     public static void initialize() throws IOException {
         parser = new DefaultParser();
@@ -83,7 +89,7 @@ public class TerminalHandler {
         String input = reader.readLine(prompt);
 
         while(!(input.equalsIgnoreCase("done") || input.equalsIgnoreCase("y"))) {
-            langFileAccessor.populateCollection(input);
+            langFileAccessor.populateCollection(input.replaceAll("\"",""));
             writer.println();
             writer.println("Input filepath of a .LANG formatted file or a folder containing such files. Type \"Done\" to complete file input.");
             writer.flush();
@@ -119,12 +125,15 @@ public class TerminalHandler {
             fileSelect();
             return;
         }
-        System.out.println("Shit");
         loadedFile = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
     }
 
-//    public void editor() {
-//
-//    }
+    public void editor() {
+        int index = 0;
+        Display textBox = new Display(terminal, false);
+        for(;index < terminalRows; index++) {
+            //screenBuffer.add(new AttributedString(loadedFile.));
+        }
+    }
 
 }
