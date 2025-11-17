@@ -1,7 +1,5 @@
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
@@ -14,38 +12,34 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TerminalHandler {
-
-    LangFileCollection langFileAccessor = Main.langFileAccessor;
-    LangFile loadedFile;
+public class Editor {
 
     static Terminal terminal;
     static PrintWriter writer;
+    static LineReader reader;
     static int terminalRows;
     static int terminalColumns;
-    static LineReader reader;
-    static DefaultParser parser;
+    static int lineOffset;
 
+    LangFile file;
     static List<AttributedString> textBuffer = new ArrayList<>();
-    static int offset;
 
-    public void initialize() throws IOException {
-        parser = new DefaultParser();
-        parser.setEscapeChars(null);
+    Editor(LangFile temp) {
+        file = temp;
+    }
 
+    public void initializeEditor() throws IOException {
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         writer = terminal.writer();
-        reader = LineReaderBuilder.builder().terminal(terminal).parser(parser).build();
+        reader = LineReaderBuilder.builder().terminal(terminal).build();
         terminalRows = terminal.getSize().getColumns();
         terminalColumns = terminal.getSize().getRows();
-        offset = 0;
+        lineOffset = 0;
 
-
-
-        terminal.handle(Signal.INT, signal -> {
-            // Handle Ctrl+C
-            System.out.println("success");
-        });
+//        terminal.handle(Signal.INT, signal -> {
+//            // Handle Ctrl+C
+//            System.out.println("success");
+//        });
         terminal.handle(Signal.WINCH, signal -> {
             terminalRows = terminal.getSize().getRows();
             terminalColumns = terminal.getSize().getColumns();
@@ -53,14 +47,14 @@ public class TerminalHandler {
             editor();
         });
 
-        terminal.handle(Signal.TSTP, signal -> {
-            // Handle Ctrl+Z (suspend)
-            terminal.pause();
-        });
+//        terminal.handle(Signal.TSTP, signal -> {
+//            // Handle Ctrl+Z (suspend)
+//            terminal.pause();
+//        });
 
     }
 
-    public void clearScreen() {
+    private void clearScreen() {
         terminal.puts(InfoCmp.Capability.clear_screen);
         writer.flush();
     }
@@ -109,22 +103,22 @@ public class TerminalHandler {
             fileSelect();
             return;
         }
-        loadedFile = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
+        file = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
     }
 
-    public void editor() {
-        Display textBox = new Display(terminal, true);
-        textBox.update(textBuffer, 0,true);
-    }
+//    public void editor() {
+//        Display textBox = new Display(terminal, true);
+//        textBox.update(textBuffer, 0,true);
+//    }
 
     public void initializeScreenBuffer() {
-        String keyBuffer = loadedFile.getInitialValue()[0];
+        String keyBuffer = file.getInitialValue()[0];
         int i = 0;
-        while(i < offset) {
-            keyBuffer = loadedFile.nextKeyValue(keyBuffer);
+        while(i < lineOffset) {
+            keyBuffer = file.nextKeyValue(keyBuffer);
         }
 
-        textBuffer.add(new AttributedString(loadedFile.nextKeyValue(keyBuffer)));
+        textBuffer.add(new AttributedString(file.nextKeyValue(keyBuffer)));
     }
 
 }

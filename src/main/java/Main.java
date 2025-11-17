@@ -1,18 +1,13 @@
-import org.jline.terminal.Terminal;
-import org.jline.utils.Signals;
-
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
 
     static LangFileCollection langFileAccessor = new LangFileCollection();
 
     public static void main(String[] args) throws IOException {
-        TerminalHandler terminal  = new TerminalHandler();
-        terminal.initialize();
+        Editor terminal  = new Editor();
+        terminal.initializeEditor();
         terminal.inputPrompt();
-        terminal.clearScreen();
         terminal.fileSelect();
         terminal.initializeScreenBuffer();
         terminal.editor();
