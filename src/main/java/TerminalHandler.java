@@ -1,6 +1,7 @@
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.DefaultParser;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
@@ -11,7 +12,6 @@ import org.jline.utils.InfoCmp.Capability;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TerminalHandler {
@@ -26,9 +26,10 @@ public class TerminalHandler {
     static LineReader reader;
     static DefaultParser parser;
 
-    static List<AttributedString> screenBuffer = new ArrayList<>();
+    static List<AttributedString> textBuffer = new ArrayList<>();
+    static int offset;
 
-    public static void initialize() throws IOException {
+    public void initialize() throws IOException {
         parser = new DefaultParser();
         parser.setEscapeChars(null);
 
@@ -37,6 +38,9 @@ public class TerminalHandler {
         reader = LineReaderBuilder.builder().terminal(terminal).parser(parser).build();
         terminalRows = terminal.getSize().getColumns();
         terminalColumns = terminal.getSize().getRows();
+        offset = 0;
+
+
 
         terminal.handle(Signal.INT, signal -> {
             // Handle Ctrl+C
@@ -45,7 +49,8 @@ public class TerminalHandler {
         terminal.handle(Signal.WINCH, signal -> {
             terminalRows = terminal.getSize().getRows();
             terminalColumns = terminal.getSize().getColumns();
-            draw();
+            initializeScreenBuffer();
+            editor();
         });
 
         terminal.handle(Signal.TSTP, signal -> {
@@ -54,27 +59,6 @@ public class TerminalHandler {
         });
 
     }
-
-    public static void draw() {
-//        StringBuilder line = new StringBuilder();
-//        for(int i = 0; i < terminalColumns; i++) {
-//            line.append("-");
-//        }
-//        terminal.puts(InfoCmp.Capability.clear_screen);
-//        writer.flush();
-//        writer.println(line);
-//        writer.flush();
-    }
-
-//    private static  readEnforcement(String prompt, int expectedType) {
-//        if(expectedType == -1) {
-//            return reader.readLine(prompt);
-//        } if(expectedType == 0) {
-//
-//        } if(expectedType == 1) {
-//
-//        }
-//    }
 
     public void clearScreen() {
         terminal.puts(InfoCmp.Capability.clear_screen);
@@ -129,11 +113,18 @@ public class TerminalHandler {
     }
 
     public void editor() {
-        int index = 0;
-        Display textBox = new Display(terminal, false);
-        for(;index < terminalRows; index++) {
-            //screenBuffer.add(new AttributedString(loadedFile.));
+        Display textBox = new Display(terminal, true);
+        textBox.update(textBuffer, 0,true);
+    }
+
+    public void initializeScreenBuffer() {
+        String keyBuffer = loadedFile.getInitialValue()[0];
+        int i = 0;
+        while(i < offset) {
+            keyBuffer = loadedFile.nextKeyValue(keyBuffer);
         }
+
+        textBuffer.add(new AttributedString(loadedFile.nextKeyValue(keyBuffer)));
     }
 
 }

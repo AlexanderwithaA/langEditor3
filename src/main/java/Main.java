@@ -14,6 +14,8 @@ public class Main {
         terminal.inputPrompt();
         terminal.clearScreen();
         terminal.fileSelect();
+        terminal.initializeScreenBuffer();
+        terminal.editor();
 
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");
