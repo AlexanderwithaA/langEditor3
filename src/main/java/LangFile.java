@@ -63,18 +63,18 @@ public class LangFile {
     }
 
     // next two methods return null if they try to read off the end of the filetreemap.
-    public String nextKeyValue(String from) {
+    public String[] nextKeyValue(String from) {
         if (fileTreeMap.containsKey(from) && fileTreeMap.higherEntry(from) != null) {
-            return fileTreeMap.higherEntry(from).toString().split("=", 2)[0];
+            return fileTreeMap.higherEntry(from).toString().split("=", 2);
         }
-        return null;
+        return new String[] {null,null};
     }
 
-    public String previousKeyValue(String from) {
+    public String[] previousKeyValue(String from) {
         if (fileTreeMap.containsKey(from) && fileTreeMap.lowerEntry(from) != null) {
-            return fileTreeMap.lowerEntry(from).toString().split("=", 2)[0];
+            return fileTreeMap.lowerEntry(from).toString().split("=", 2);
         }
-        return null;
+        return new String[] {null,null};
     }
 
 

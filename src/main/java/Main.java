@@ -2,15 +2,13 @@ import java.io.IOException;
 
 public class Main {
 
-    static LangFileCollection langFileAccessor = new LangFileCollection();
-
     public static void main(String[] args) throws IOException {
-        Editor terminal  = new Editor();
+
+        LangFileCollection temp = new LangFileCollection();
+
+        temp.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
+        Editor terminal  = new Editor(temp.loadFile("strings.lang"));
         terminal.initializeEditor();
-        terminal.inputPrompt();
-        terminal.fileSelect();
-        terminal.initializeScreenBuffer();
-        terminal.editor();
 
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");
