@@ -1,5 +1,6 @@
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
@@ -17,13 +18,12 @@ public class Editor {
     static Terminal terminal;
     static PrintWriter writer;
     static LineReader reader;
-    static int terminalRows;
-    static int terminalColumns;
     static int lineOffset;
 
+    Size terminalSize;
     LangFile file;
-    Display keyBox;
-    Display valueBox;
+    Display textBox;
+//    Display valueBox;
     static List<AttributedString> keyScreenBuffer = new ArrayList<>();
     static List<AttributedString> valueScreenBuffer = new ArrayList<>();
 
@@ -33,13 +33,11 @@ public class Editor {
 
     public void initializeEditor() throws IOException {
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
-        keyBox = new Display(terminal, false);
-        valueBox = new Display(terminal, false);
+        textBox = new Display(terminal, false);
         writer = terminal.writer();
         reader = LineReaderBuilder.builder().terminal(terminal).build();
 
-        terminalRows = terminal.getSize().getRows();
-        terminalColumns = terminal.getSize().getColumns();
+        terminalSize = terminal.getSize();
         lineOffset = 0;
 
         initializeScreenBuffer();
@@ -50,8 +48,7 @@ public class Editor {
 //            System.out.println("success");
 //        });
         terminal.handle(Signal.WINCH, signal -> {
-            terminalRows = terminal.getSize().getRows();
-            terminalColumns = terminal.getSize().getColumns();
+            terminalSize = terminal.getSize();
             initializeScreenBuffer();
             print();
         });
@@ -117,14 +114,20 @@ public class Editor {
 
     private void print() {
         clearScreen();
-//        keyBox.resize(terminalRows, terminalColumns / 4);
-//        keyBox.update(keyScreenBuffer, 1);
-        terminal.puts(Capability.cursor_address, 20, 20);
-        valueBox.resize(terminalRows, terminalColumns - (terminalColumns / 4));
-        valueBox.update(valueScreenBuffer, 1);
+        textBox.resize(terminalSize.getRows(), terminalSize.getColumns());
+        textBox.update(valueScreenBuffer, terminalSize.cursorPos(0,80));
+        textBox.update(keyScreenBuffer, 0);
         terminal.puts(Capability.cursor_address, 0, 0);
-        writer.println(terminalRows + ":" + terminalColumns + " >=(*>");
+        writer.println(terminalSize.getRows() + ":" + terminalSize.getColumns() + " >=(*>");
         writer.flush();
+    }
+
+    private List<AttributedString> bufferReparser(int delimiterPos) {
+        List<AttributedString> reparseOutput = new ArrayList<>();
+
+        for(int i = 0; i < keyScreenBuffer.size(); i++) {
+            keyScreenBuffer[i].substring(0,delimiterPos - 1) + keyScreenBuffer[i].size;
+        }
     }
 
     private void initializeScreenBuffer() {
@@ -135,7 +138,7 @@ public class Editor {
             i++;
         }
 
-        for(i = 0; i < terminalRows; i++) {
+        for(i = 0; i < terminalSize.getRows(); i++) {
             keyScreenBuffer.add(new AttributedString(file.nextKeyValue(keyBuffer)[0]));
             valueScreenBuffer.add(new AttributedString(file.nextKeyValue(keyBuffer)[1]));
             keyBuffer = file.nextKeyValue(keyBuffer)[0];

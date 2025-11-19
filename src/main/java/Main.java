@@ -10,6 +10,7 @@ public class Main {
         Editor terminal  = new Editor(temp.loadFile("strings.lang"));
         terminal.initializeEditor();
 
+
 //        Object handle = Signals.register("INT", () -> {
 //            System.out.println("Caught SIGINT");
 //            // Perform cleanup
