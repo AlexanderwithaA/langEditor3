@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public class LangFile {
 
@@ -39,9 +36,10 @@ public class LangFile {
             System.out.println(error);
         }
     }
-    private void printTreeMap() {
-        for(Map.Entry<String,String> entry : fileTreeMap.entrySet()) {
-            System.out.println(entry);
+    public ArrayList<String[]> getTreeMap() {
+
+        for(Map.Entry<String,String> item : fileTreeMap) {
+
         }
     }
 

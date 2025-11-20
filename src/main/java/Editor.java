@@ -115,20 +115,22 @@ public class Editor {
     private void print() {
         clearScreen();
         textBox.resize(terminalSize.getRows(), terminalSize.getColumns());
-        textBox.update(valueScreenBuffer, terminalSize.cursorPos(0,80));
         textBox.update(keyScreenBuffer, 0);
+        textBox.update(valueScreenBuffer, terminalSize.cursorPos(10,10));
         terminal.puts(Capability.cursor_address, 0, 0);
         writer.println(terminalSize.getRows() + ":" + terminalSize.getColumns() + " >=(*>");
         writer.flush();
+
+        System.out.println(file.getTreeMap());
     }
 
-    private List<AttributedString> bufferReparser(int delimiterPos) {
-        List<AttributedString> reparseOutput = new ArrayList<>();
-
-        for(int i = 0; i < keyScreenBuffer.size(); i++) {
-            keyScreenBuffer[i].substring(0,delimiterPos - 1) + keyScreenBuffer[i].size;
-        }
-    }
+//    private List<AttributedString> bufferReparser(int delimiterPos) {
+//        List<AttributedString> reparseOutput = new ArrayList<>();
+//
+//        for(int i = 0; i < keyScreenBuffer.size(); i++) {
+//            keyScreenBuffer[i].substring(0,delimiterPos - 1) + keyScreenBuffer[i].size;
+//        }
+//    }
 
     private void initializeScreenBuffer() {
         String keyBuffer = file.getInitialValue()[0];
