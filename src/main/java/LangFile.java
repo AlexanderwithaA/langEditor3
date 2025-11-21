@@ -36,11 +36,16 @@ public class LangFile {
             System.out.println(error);
         }
     }
-    public ArrayList<String[]> getTreeMap() {
+    public List<Object> getTreeMap() {
+        List<String> keys = new ArrayList<>();
+        List<String> values = new ArrayList<>();
 
-        for(Map.Entry<String,String> item : fileTreeMap) {
-
+        for(Map.Entry<String,String> item : fileTreeMap.entrySet()) {
+            keys.add(item.getKey());
+            values.add(item.getValue());
         }
+
+        return Arrays.asList(keys,values);
     }
 
     public String getValue(String key) {
