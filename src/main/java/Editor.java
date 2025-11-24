@@ -19,6 +19,7 @@ public class Editor {
     static PrintWriter writer;
     static LineReader reader;
     static int lineOffset;
+    static int lastWidth;
 
     Size terminalSize;
     LangFile file;
@@ -36,6 +37,7 @@ public class Editor {
 
         terminalSize = terminal.getSize();
         lineOffset = 0;
+        lastWidth = terminalSize.getColumns();
 
         print();
 
@@ -45,7 +47,11 @@ public class Editor {
 //        });
         terminal.handle(Signal.WINCH, signal -> {
             terminalSize = terminal.getSize();
-            print();
+
+            if(Math.abs(terminalSize.getColumns() - lastWidth) > 5) {
+                lastWidth = terminalSize.getColumns();
+                print();
+            }
         });
 
 //        terminal.handle(Signal.TSTP, signal -> {
@@ -110,8 +116,8 @@ public class Editor {
     private void print() {
         clearScreen();
         List<Object> temp = file.getTreeMap();
-        keyValueBox.resize(terminalSize.getRows(), terminalSize.getColumns());
-        keyValueBox.update(reparser(10, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
+        keyValueBox.resize(file.fileTreeMap.size(), terminalSize.getColumns());
+        keyValueBox.update(reparser(terminalSize.getColumns()/4, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
 //        terminal.puts(Capability.cursor_address, 0, 0);
 //        writer.println(terminalSize.getRows() + ":" + terminalSize.getColumns() + " >=(*>");
         writer.flush();
@@ -125,8 +131,9 @@ public class Editor {
             reparseOutput.add(
                 new AttributedString(
                     keys.get(i).substring(0,Math.min(keys.get(i).length(),delimiterPos - 1)) +
-                            ws.repeat(' ',Math.max((delimiterPos - keys.get(i).length()),1)) +
-                            values.get(i)
+                            (delimiterPos - keys.get(i).length()) % 2 == 1 ? " " : "";
+                            ws.repeat("- ",Math.max((delimiterPos - keys.get(i).length()),0)) +
+                            " = " + values.get(i)
                 )
             );
             ws.setLength(0);
