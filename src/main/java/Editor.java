@@ -125,18 +125,24 @@ public class Editor {
 
     private List<AttributedString> reparser(int delimiterPos, List<String> keys, List<String> values) {
         List<AttributedString> reparseOutput = new ArrayList<>();
-        StringBuilder ws = new StringBuilder();
+        StringBuilder temp = new StringBuilder();
 
         for(int i = 0; i < keys.size(); i++) {
-            reparseOutput.add(
-                new AttributedString(
-                    keys.get(i).substring(0,Math.min(keys.get(i).length(),delimiterPos - 1)) +
-                            (delimiterPos - keys.get(i).length()) % 2 == 1 ? " " : "";
-                            ws.repeat("- ",Math.max((delimiterPos - keys.get(i).length()),0)) +
-                            " = " + values.get(i)
-                )
-            );
-            ws.setLength(0);
+
+            //temp.append(keys.get(i).length() + ":" + delimiterPos + ":" + Math.max((delimiterPos - keys.get(i).length()) / 2,0) + " (" + (delimiterPos - keys.get(i).length()) + ") ");
+            temp.append(keys.get(i).substring(0,Math.min(keys.get(i).length(),delimiterPos - 1)));
+            temp.append(" ");
+
+                if (temp.length() % 2 == 1) {
+                    temp.append(" ");
+                }
+                temp.repeat("- ", Math.max((delimiterPos - temp.length() + 1) / 2, 0));
+
+            temp.append(values.get(i));
+
+            reparseOutput.add(new AttributedString(temp));
+
+            temp.setLength(0);
         }
         return reparseOutput;
     }
