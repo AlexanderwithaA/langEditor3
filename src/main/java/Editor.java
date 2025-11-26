@@ -1,3 +1,5 @@
+import org.jline.keymap.BindingReader;
+import org.jline.keymap.KeyMap;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Size;
@@ -15,11 +17,16 @@ import java.util.List;
 
 public class Editor {
 
-    static Terminal terminal;
-    static PrintWriter writer;
-    static LineReader reader;
-    static int lineOffset;
-    static int lastWidth;
+    Terminal terminal;
+    PrintWriter writer;
+    LineReader reader;
+    BindingReader bindingReader;
+
+    int lineOffset;
+    int lastWidth;
+    int cursorPos;
+    int delimiter;
+    KeyMap<String> keyMap = new KeyMap<>();
 
     Size terminalSize;
     LangFile file;
@@ -34,6 +41,13 @@ public class Editor {
         keyValueBox = new Display(terminal, false);
         writer = terminal.writer();
         reader = LineReaderBuilder.builder().terminal(terminal).build();
+        bindingReader = new BindingReader(terminal.reader());
+
+        keyMap.bind("cursor-up", "");
+        keyMap.bind("cursor-down", "h");
+        keyMap.bind("action-a", "a");
+        keyMap.bind("action-b", "b");
+        keyMap.bind("action-c", "c");
 
         terminalSize = terminal.getSize();
         lineOffset = 0;
@@ -45,6 +59,7 @@ public class Editor {
 //            // Handle Ctrl+C
 //            System.out.println("success");
 //        });
+
         terminal.handle(Signal.WINCH, signal -> {
             terminalSize = terminal.getSize();
 
@@ -58,6 +73,25 @@ public class Editor {
 //            // Handle Ctrl+Z (suspend)
 //            terminal.pause();
 //        });
+
+        while (true) {
+            String operation = bindingReader.readBinding(keyMap);
+
+            if ("quit".equals(operation)) {
+                terminal.writer().println("Quitting...");
+                break;
+            } else if ("help".equals(operation)) {
+                terminal.writer().println("Help: Press a, b, c for actions, q to quit");
+            } else if ("action-a".equals(operation)) {
+                terminal.writer().println("Executing action A");
+            } else if ("action-b".equals(operation)) {
+                terminal.writer().println("Executing action B");
+            } else if ("action-c".equals(operation)) {
+                terminal.writer().println("Executing action C");
+            }
+
+            terminal.flush();
+        }
 
     }
 
@@ -113,11 +147,16 @@ public class Editor {
 //        file = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
 //    }
 
+    public void lineEdit(int line) {
+        terminal.puts(InfoCmp.Capability.cursor_address, delimiter, line);
+    }
+
     private void print() {
         clearScreen();
         List<Object> temp = file.getTreeMap();
+        delimiter = terminalSize.getColumns()/4;
         keyValueBox.resize(file.fileTreeMap.size(), terminalSize.getColumns());
-        keyValueBox.update(reparser(terminalSize.getColumns()/4, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
+        keyValueBox.update(reparser(delimiter, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
 //        terminal.puts(Capability.cursor_address, 0, 0);
 //        writer.println(terminalSize.getRows() + ":" + terminalSize.getColumns() + " >=(*>");
         writer.flush();
