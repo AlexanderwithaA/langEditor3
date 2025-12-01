@@ -1,3 +1,4 @@
+import jdk.dynalink.Operation;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.reader.LineReader;
@@ -9,11 +10,15 @@ import org.jline.terminal.Terminal.Signal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp;
+import org.jline.utils.InfoCmp.Capability;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.jline.keymap.KeyMap.del;
+import static org.jline.keymap.KeyMap.key;
 
 public class Editor {
 
@@ -24,9 +29,11 @@ public class Editor {
 
     int lineOffset;
     int lastWidth;
-    int cursorPos;
+    int cursorLR;
+    int cursorUD;
     int delimiter;
-    KeyMap<String> keyMap = new KeyMap<>();
+    KeyMap<Operation> keyMap = new KeyMap<>();
+    enum Operation {LEFT, RIGHT, UP, DOWN};
 
     Size terminalSize;
     LangFile file;
@@ -43,11 +50,10 @@ public class Editor {
         reader = LineReaderBuilder.builder().terminal(terminal).build();
         bindingReader = new BindingReader(terminal.reader());
 
-        keyMap.bind("cursor-up", "");
-        keyMap.bind("cursor-down", "h");
-        keyMap.bind("action-a", "a");
-        keyMap.bind("action-b", "b");
-        keyMap.bind("action-c", "c");
+        keyMap.bind(Operation.LEFT, key(terminal, Capability.key_left));
+        keyMap.bind(Operation.RIGHT, key(terminal, Capability.key_right));
+        keyMap.bind(Operation.UP, key(terminal, Capability.key_up));
+        keyMap.bind(Operation.DOWN, key(terminal, Capability.key_down));
 
         terminalSize = terminal.getSize();
         lineOffset = 0;
@@ -75,20 +81,28 @@ public class Editor {
 //        });
 
         while (true) {
-            String operation = bindingReader.readBinding(keyMap);
+            Operation op = bindingReader.readBinding(keyMap);
 
-            if ("quit".equals(operation)) {
-                terminal.writer().println("Quitting...");
-                break;
-            } else if ("help".equals(operation)) {
-                terminal.writer().println("Help: Press a, b, c for actions, q to quit");
-            } else if ("action-a".equals(operation)) {
-                terminal.writer().println("Executing action A");
-            } else if ("action-b".equals(operation)) {
-                terminal.writer().println("Executing action B");
-            } else if ("action-c".equals(operation)) {
-                terminal.writer().println("Executing action C");
+            switch(op) {
+                case LEFT:
+                    if(!(cursorLR < delimiter + 2)) {
+                        cursorLR--;
+                    }
+                    break;
+                case RIGHT:
+                    if(!(cursorLR > terminalSize.getColumns())) {
+                        cursorLR++;
+                    }
+                    break;
+                case UP:
+                        cursorUD++;
+                    break;
+                case DOWN:
+                        cursorUD--;
+                    break;
             }
+
+            terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
 
             terminal.flush();
         }
@@ -157,9 +171,11 @@ public class Editor {
         delimiter = terminalSize.getColumns()/4;
         keyValueBox.resize(file.fileTreeMap.size(), terminalSize.getColumns());
         keyValueBox.update(reparser(delimiter, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
-//        terminal.puts(Capability.cursor_address, 0, 0);
-//        writer.println(terminalSize.getRows() + ":" + terminalSize.getColumns() + " >=(*>");
         writer.flush();
+
+        if(cursorLR < delimiter + 2) {
+            cursorLR = delimiter + 2;
+        }
     }
 
     private List<AttributedString> reparser(int delimiterPos, List<String> keys, List<String> values) {
