@@ -1,4 +1,3 @@
-import jdk.dynalink.Operation;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.reader.LineReader;
@@ -33,15 +32,18 @@ public class Editor {
     int cursorUD;
     int delimiter;
     KeyMap<Operation> keyMap = new KeyMap<>();
-    enum Operation {LEFT, RIGHT, UP, DOWN};
+
+    enum Operation {LEFT, RIGHT, UP, DOWN;};
 
     Size terminalSize;
     LangFile file;
     Display keyValueBox;
-
     Editor(LangFile temp) {
         file = temp;
     }
+
+    List<Object> treeMapData;
+    List<AttributedString> parsedTreeMapData;
 
     public void initializeEditor() throws IOException {
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
@@ -49,6 +51,8 @@ public class Editor {
         writer = terminal.writer();
         reader = LineReaderBuilder.builder().terminal(terminal).build();
         bindingReader = new BindingReader(terminal.reader());
+        treeMapData = file.getTreeMap();
+        delimiter = 10;
 
         keyMap.bind(Operation.LEFT, key(terminal, Capability.key_left));
         keyMap.bind(Operation.RIGHT, key(terminal, Capability.key_right));
@@ -56,10 +60,16 @@ public class Editor {
         keyMap.bind(Operation.DOWN, key(terminal, Capability.key_down));
 
         terminalSize = terminal.getSize();
+        if(terminalSize.getColumns() == 0) {
+            terminalSize.setColumns(10);
+            terminalSize.setRows(10);
+        }
+        keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
         lineOffset = 0;
         lastWidth = terminalSize.getColumns();
 
-        print();
+        //print();
+        screenDisplay();
 
 //        terminal.handle(Signal.INT, signal -> {
 //            // Handle Ctrl+C
@@ -71,7 +81,13 @@ public class Editor {
 
             if(Math.abs(terminalSize.getColumns() - lastWidth) > 5) {
                 lastWidth = terminalSize.getColumns();
-                print();
+                delimiter = terminalSize.getColumns()/4;
+                if(delimiter < 10) {
+                    delimiter = 10;
+                }
+                keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
+                //print();
+                screenDisplay();
             }
         });
 
@@ -95,13 +111,25 @@ public class Editor {
                     }
                     break;
                 case UP:
-                        cursorUD++;
+                    if(cursorUD < 2 && lineOffset > 0) {
+                        lineOffset--;
+                        screenDisplay();
+                    } else if(cursorUD > 0) {
+                        cursorUD--;
+                    }
                     break;
                 case DOWN:
-                        cursorUD--;
+                    if(cursorUD > terminalSize.getRows() - 4 && lineOffset < parsedTreeMapData.size() - 1 - terminalSize.getRows()) {
+                        lineOffset++;
+                        screenDisplay();
+                    } else if(cursorUD < terminalSize.getRows() - 2) {
+                        cursorUD++;
+                    }
                     break;
             }
 
+            terminal.puts(Capability.cursor_address, 0,0);
+            writer.print(cursorUD + ":" + cursorLR + " ");
             terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
 
             terminal.flush();
@@ -161,30 +189,28 @@ public class Editor {
 //        file = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
 //    }
 
-    public void lineEdit(int line) {
-        terminal.puts(InfoCmp.Capability.cursor_address, delimiter, line);
-    }
+//    public void lineEdit(int line) {
+//        terminal.puts(InfoCmp.Capability.cursor_address, delimiter, line);
+//    }
 
-    private void print() {
-        clearScreen();
-        List<Object> temp = file.getTreeMap();
-        delimiter = terminalSize.getColumns()/4;
-        keyValueBox.resize(file.fileTreeMap.size(), terminalSize.getColumns());
-        keyValueBox.update(reparser(delimiter, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
-        writer.flush();
-
-        if(cursorLR < delimiter + 2) {
-            cursorLR = delimiter + 2;
-        }
-    }
+//    private void print() {
+//        clearScreen();
+//        List<Object> temp = file.getTreeMap();
+//        delimiter = terminalSize.getColumns()/4;
+//        keyValueBox.resize(file.fileTreeMap.size(), terminalSize.getColumns());
+//        keyValueBox.update(reparser(delimiter, (List<String>) temp.getFirst(), (List<String>) temp.getLast()), 0);
+//        writer.flush();
+//
+//        if(cursorLR < delimiter + 2) {
+//            cursorLR = delimiter + 2;
+//        }
+//    }
 
     private List<AttributedString> reparser(int delimiterPos, List<String> keys, List<String> values) {
         List<AttributedString> reparseOutput = new ArrayList<>();
         StringBuilder temp = new StringBuilder();
 
         for(int i = 0; i < keys.size(); i++) {
-
-            //temp.append(keys.get(i).length() + ":" + delimiterPos + ":" + Math.max((delimiterPos - keys.get(i).length()) / 2,0) + " (" + (delimiterPos - keys.get(i).length()) + ") ");
             temp.append(keys.get(i).substring(0,Math.min(keys.get(i).length(),delimiterPos - 1)));
             temp.append(" ");
 
@@ -200,5 +226,14 @@ public class Editor {
             temp.setLength(0);
         }
         return reparseOutput;
+    }
+
+    private void screenDisplay() {
+        parsedTreeMapData = reparser(delimiter, (List<String>) treeMapData.getFirst(), (List<String>) treeMapData.getLast());
+
+        clearScreen();
+
+        keyValueBox.update(parsedTreeMapData.subList(Math.max(0,lineOffset),Math.min(lineOffset + terminalSize.getRows(), parsedTreeMapData.size() - 1) - 1),0);
+        writer.flush();
     }
 }
