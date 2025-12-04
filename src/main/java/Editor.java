@@ -8,7 +8,6 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,15 +24,15 @@ public class Editor {
     LangFile file;
     Display keyValueBox;
 
-    enum Operation {LEFT, RIGHT, UP, DOWN, Z};
-    KeyMap<Operation> keyMap = new KeyMap<>();
-
-    List<AttributedString> parsedTreeMapData;
-
     int KVlistOffset = 0;
     int KVseparatorPos = 0;
     int cursorLR;
     int cursorUD;
+
+    enum Operation {LEFT, RIGHT, UP, DOWN, Z};
+    KeyMap<Operation> keyMap = new KeyMap<>();
+
+    List<AttributedString> parsedTreeMapData;
 
     Editor(LangFile temp) {
         file = temp;
@@ -44,13 +43,7 @@ public class Editor {
         keyValueBox = new Display(terminal, false);
         writer = terminal.writer();
         //reader = LineReaderBuilder.builder().terminal(terminal).build();
-
-
         terminalSize = terminal.getSize();
-        if(terminalSize.getColumns() == 0) {
-            terminalSize.setColumns(10);
-            terminalSize.setRows(10);
-        }
 
         screenDisplay(true);
 
@@ -67,9 +60,6 @@ public class Editor {
             //if(Math.abs(terminalSize.getColumns() - lastWidth) > 5) {
             //    lastWidth = terminalSize.getColumns();
                 KVseparatorPos = terminalSize.getColumns()/4;
-//                if(KVseparatorPos < 10) {
-//                    KVseparatorPos = 10;
-//                }
                 keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
                 screenDisplay(false);
             //}
@@ -87,9 +77,11 @@ public class Editor {
         keyMap.bind(Operation.DOWN, key(terminal, Capability.key_down));
         keyMap.bind(Operation.Z, "z");
 
-        while (true) {
-            Operation op = bindingReader.readBinding(keyMap);
+        Operation op = bindingReader.readBinding(keyMap);
 
+        while (true) {
+
+            op = bindingReader.readBinding(keyMap);
             switch(op) {
                 case LEFT:
                     if(!(cursorLR < KVseparatorPos + 2)) {
@@ -129,11 +121,6 @@ public class Editor {
 
             terminal.flush();
         }
-    }
-
-    private void clearScreen() {
-        terminal.puts(InfoCmp.Capability.clear_screen);
-        writer.flush();
     }
 
 //    public void inputPrompt() {
@@ -183,10 +170,6 @@ public class Editor {
 //        file = langFileAccessor.loadFile(langFileAccessor.getFileNames()[input]);
 //    }
 
-//    public void lineEdit(int line) {
-//        terminal.puts(InfoCmp.Capability.cursor_address, KVseparatorPos, line);
-//    }
-
     private List<AttributedString> reparser(int delimiterPos, List<String> keys, List<String> values) {
         List<AttributedString> reparseOutput = new ArrayList<>();
         StringBuilder temp = new StringBuilder();
@@ -215,18 +198,19 @@ public class Editor {
         if(setup) {
             KVseparatorPos = terminalSize.getColumns()/4;
             KVlistOffset = 0;
+            keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
         }
 
         parsedTreeMapData = reparser(KVseparatorPos, (List<String>) file.getTreeMap().getFirst(), (List<String>) file.getTreeMap().getLast());
-        clearScreen();
-
-        if(setup) {
-            keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
-            terminal.puts(Capability.cursor_address, 0, KVseparatorPos);
-            terminal.flush();
-        }
+        terminal.puts(InfoCmp.Capability.clear_screen);
 
         keyValueBox.update(parsedTreeMapData.subList(Math.max(0, KVlistOffset),Math.min(KVlistOffset + terminalSize.getRows(), parsedTreeMapData.size() - 1) - 1),0);
+
+        if(setup) {
+            terminal.puts(Capability.cursor_address, 0, KVseparatorPos + 1);
+            cursorLR = KVseparatorPos + 1;
+        }
+
         writer.flush();
     }
 }
