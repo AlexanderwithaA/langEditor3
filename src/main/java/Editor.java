@@ -40,6 +40,8 @@ public class Editor {
 
     public void initializeEditor() throws IOException {
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
+        terminal.puts(Capability.enter_ca_mode);
+        terminal.flush();
         keyValueBox = new Display(terminal, false);
         writer = terminal.writer();
         //reader = LineReaderBuilder.builder().terminal(terminal).build();
@@ -102,7 +104,7 @@ public class Editor {
                     }
                     break;
                 case DOWN:
-                    if(cursorUD > terminalSize.getRows() - 4 && KVlistOffset < parsedTreeMapData.size() - 1 - terminalSize.getRows()) {
+                    if(cursorUD > terminalSize.getRows() - 4 && KVlistOffset < parsedTreeMapData.size() + 1 - terminalSize.getRows()) {
                         KVlistOffset++;
                         screenDisplay(false);
                     } else if(cursorUD < terminalSize.getRows() - 2) {
@@ -198,18 +200,30 @@ public class Editor {
         if(setup) {
             KVseparatorPos = terminalSize.getColumns()/4;
             KVlistOffset = 0;
-            keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
         }
+
+        keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns() + 1); //resizing fixes the god awful Display class issue.
+        keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
 
         parsedTreeMapData = reparser(KVseparatorPos, (List<String>) file.getTreeMap().getFirst(), (List<String>) file.getTreeMap().getLast());
         terminal.puts(InfoCmp.Capability.clear_screen);
 
-        keyValueBox.update(parsedTreeMapData.subList(Math.max(0, KVlistOffset),Math.min(KVlistOffset + terminalSize.getRows(), parsedTreeMapData.size() - 1) - 1),0);
+        keyValueBox.update(parsedTreeMapData.subList(Math.max(0, KVlistOffset),Math.min(KVlistOffset + terminalSize.getRows(), parsedTreeMapData.size())),0);
 
         if(setup) {
             terminal.puts(Capability.cursor_address, 0, KVseparatorPos + 1);
             cursorLR = KVseparatorPos + 1;
         }
+
+        terminal.puts(Capability.save_cursor);
+        terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos);
+        if(cursorUD > terminalSize.getRows() - 3) {
+            terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos);
+
+        }
+        writer.println("test text is cool!");
+
+        terminal.puts(Capability.restore_cursor);
 
         writer.flush();
     }
