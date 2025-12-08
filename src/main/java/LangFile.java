@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class LangFile {
 
@@ -36,6 +37,12 @@ public class LangFile {
             System.out.println(error);
         }
     }
+
+    //giving people SqLite flashbacks
+    public void dropAllValues() {
+        fileTreeMap.replaceAll((k, v) -> "");
+    }
+
     public List<Object> getTreeMap() {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();

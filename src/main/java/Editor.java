@@ -22,14 +22,17 @@ public class Editor {
     //LineReader reader;
     Size terminalSize;
     LangFile file;
+    LangFile newFile;
     Display keyValueBox;
 
     int KVlistOffset = 0;
     int KVseparatorPos = 0;
+    String currentKey;
     int cursorLR;
     int cursorUD;
 
-    enum Operation {LEFT, RIGHT, UP, DOWN, Z};
+
+    enum Operation {LEFT, RIGHT, UP, DOWN, Z;};
     KeyMap<Operation> keyMap = new KeyMap<>();
 
     List<AttributedString> parsedTreeMapData;
@@ -39,6 +42,8 @@ public class Editor {
     }
 
     public void initializeEditor() throws IOException {
+        newFile = Main.lfc.emptyMap(file.filePath.getName());
+        currentKey = file.getInitialValue()[0];
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         terminal.puts(Capability.enter_ca_mode);
         terminal.flush();
@@ -102,6 +107,7 @@ public class Editor {
                     } else if(cursorUD > 0) {
                         cursorUD--;
                     }
+                    currentKey = file.previousKeyValue(currentKey)[0];
                     break;
                 case DOWN:
                     if(cursorUD > terminalSize.getRows() - 4 && KVlistOffset < parsedTreeMapData.size() + 1 - terminalSize.getRows()) {
@@ -110,6 +116,7 @@ public class Editor {
                     } else if(cursorUD < terminalSize.getRows() - 2) {
                         cursorUD++;
                     }
+                    currentKey = file.nextKeyValue(currentKey)[0];
                     break;
                 case Z:
                     terminal.puts(Capability.display_clock, 0, 0, 10, 10);
@@ -202,6 +209,8 @@ public class Editor {
             KVlistOffset = 0;
         }
 
+        int key = KVlistOffset + cursorUD;
+
         keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns() + 1); //resizing fixes the god awful Display class issue.
         keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
 
@@ -217,11 +226,9 @@ public class Editor {
 
         terminal.puts(Capability.save_cursor);
         terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos);
-        if(cursorUD > terminalSize.getRows() - 3) {
-            terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos);
+        terminal.flush();
 
-        }
-        writer.println("test text is cool!");
+        writer.println(currentKey + " " + (KVlistOffset + cursorUD));
 
         terminal.puts(Capability.restore_cursor);
 

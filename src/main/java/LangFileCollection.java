@@ -55,4 +55,12 @@ public class LangFileCollection {
     public LangFile loadFile(String name) {
         return fileMap.get(name);
     }
+
+    public LangFile emptyMap(File path) {
+        insertFile(path);
+        temp = fileMap.la
+        temp.dropAllValues();
+        return temp;
+    }
+
 }
