@@ -26,9 +26,11 @@ public class Editor {
     Display keyValueBox;
 
     int KVlistOffset = 0;
+    int KVlistOffsetPre = 0;
     int KVseparatorPos = 0;
     String currentKey;
     int cursorLR;
+    int cursorMoveLimit = 0;
     int cursorUD;
 
 
@@ -37,12 +39,12 @@ public class Editor {
 
     List<AttributedString> parsedTreeMapData;
 
-    Editor(LangFile temp) {
-        file = temp;
+    Editor(String fileString) {
+        file = Main.lfc.loadFile(fileString);
+        newFile = Main.lfc.loadFile("__" + fileString);
     }
 
     public void initializeEditor() throws IOException {
-        newFile = Main.lfc.emptyMap(file.filePath.getName());
         currentKey = file.getInitialValue()[0];
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         terminal.puts(Capability.enter_ca_mode);
@@ -68,6 +70,7 @@ public class Editor {
             //    lastWidth = terminalSize.getColumns();
                 KVseparatorPos = terminalSize.getColumns()/4;
                 keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
+                cursorMoveLimit = terminalSize.getRows() - 4;
                 screenDisplay(false);
             //}
         });
@@ -101,31 +104,28 @@ public class Editor {
                     }
                     break;
                 case UP:
-                    if(cursorUD < 2 && KVlistOffset > 0) {
-                        KVlistOffset--;
-                        screenDisplay(false);
-                    } else if(cursorUD > 0) {
-                        cursorUD--;
+                    if(KVlistOffsetPre > 0) {
+                        KVlistOffsetPre--;
+                        currentKey = file.previousKeyValue(currentKey)[0];
                     }
-                    currentKey = file.previousKeyValue(currentKey)[0];
                     break;
                 case DOWN:
-                    if(cursorUD > terminalSize.getRows() - 4 && KVlistOffset < parsedTreeMapData.size() + 1 - terminalSize.getRows()) {
-                        KVlistOffset++;
-                        screenDisplay(false);
-                    } else if(cursorUD < terminalSize.getRows() - 2) {
-                        cursorUD++;
+                    if(KVlistOffsetPre < parsedTreeMapData.size() - 1) {
+                        KVlistOffsetPre++;
+                        currentKey = file.nextKeyValue(currentKey)[0];
                     }
-                    currentKey = file.nextKeyValue(currentKey)[0];
-                    break;
-                case Z:
-                    terminal.puts(Capability.display_clock, 0, 0, 10, 10);
-                    terminal.flush();
                     break;
             }
 
-            terminal.puts(Capability.cursor_address, 0,0);
-            writer.print(cursorUD + ":" + cursorLR + " ");
+            if(KVlistOffsetPre > cursorMoveLimit) {
+                cursorMoveLimit++;
+                KVlistOffset = KVlistOffsetPre - terminalSize.getRows();
+            }
+            cursorUD = Math.min(0,KVlistOffset - cursorMoveLimit);
+
+            screenDisplay(false);
+            terminal.puts(Capability.cursor_address, 10,0);
+            writer.print(cursorUD + ":" + cursorLR + "|" + KVlistOffset + " ");
             terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
 
             terminal.flush();
@@ -208,8 +208,6 @@ public class Editor {
             KVseparatorPos = terminalSize.getColumns()/4;
             KVlistOffset = 0;
         }
-
-        int key = KVlistOffset + cursorUD;
 
         keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns() + 1); //resizing fixes the god awful Display class issue.
         keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());

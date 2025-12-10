@@ -38,10 +38,10 @@ public class LangFile {
         }
     }
 
-    //giving people SqLite flashbacks
-    public void dropAllValues() {
-        fileTreeMap.replaceAll((k, v) -> "");
-    }
+//    //giving people SqLite flashbacks
+//    public void dropAllValues() {
+//        fileTreeMap.replaceAll((k, v) -> "");
+//    }
 
     public List<Object> getTreeMap() {
         List<String> keys = new ArrayList<>();

@@ -45,6 +45,7 @@ public class LangFileCollection {
         String name = path.getName();
         if(!fileMap.containsKey(name)) {
             fileMap.put(name, new LangFile(path));
+            fileMap.put("__" + name, new LangFile(path));
         }
     }
 
@@ -56,11 +57,11 @@ public class LangFileCollection {
         return fileMap.get(name);
     }
 
-    public LangFile emptyMap(File path) {
-        insertFile(path);
-        temp = fileMap.la
-        temp.dropAllValues();
-        return temp;
-    }
+//    public LangFile emptyMap(File path) {
+//        insertFile(path);
+//        temp = fileMap.la
+//        temp.dropAllValues();
+//        return temp;
+//    }
 
 }

@@ -12,7 +12,7 @@ public class Main {
         lfc = new LangFileCollection();
 
         lfc.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
-        Editor terminal  = new Editor(lfc.loadFile("strings.lang"));
+        Editor terminal  = new Editor("strings.lang");
         terminal.initializeEditor();
 
 
