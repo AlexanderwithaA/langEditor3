@@ -56,10 +56,10 @@ public class Editor {
 
         screenDisplay(true);
 
-//        terminal.handle(Signal.INT, signal -> {
-//            // Handle Ctrl+C
-//            System.out.println("success");
-//        });
+        terminal.handle(Signal.INT, signal -> {
+            // Handle Ctrl+C
+            System.out.println("nuh-uh");
+        });
 
         //int lastWidth = terminalSize.getColumns();
 
@@ -110,18 +110,20 @@ public class Editor {
                     }
                     break;
                 case DOWN:
-                    if(KVlistOffsetPre < parsedTreeMapData.size() - 1) {
+                    if(KVlistOffsetPre < parsedTreeMapData.size()) {
                         KVlistOffsetPre++;
                         currentKey = file.nextKeyValue(currentKey)[0];
                     }
                     break;
             }
 
-            if(KVlistOffsetPre > cursorMoveLimit) {
-                cursorMoveLimit++;
-                KVlistOffset = KVlistOffsetPre - terminalSize.getRows();
+            if(KVlistOffsetPre <= terminalSize.getRows()) {
+                cursorUD = KVlistOffsetPre;
+            } else if(KVlistOffsetPre >= parsedTreeMapData.size() - terminalSize.getRows()) {
+                cursorUD = KVlistOffset - KVlistOffsetPre - terminalSize.getRows();
+            } else {
+                KVlistOffset = KVlistOffsetPre;
             }
-            cursorUD = Math.min(0,KVlistOffset - cursorMoveLimit);
 
             screenDisplay(false);
             terminal.puts(Capability.cursor_address, 10,0);
@@ -233,8 +235,3 @@ public class Editor {
         writer.flush();
     }
 }
-
-//printing to terminal needs:
-// KVSeparatorPos
-// KVlistOffset
-//
