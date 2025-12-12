@@ -235,7 +235,7 @@ public class Editor {
             terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos);
         }
         terminal.flush();
-        lineText = AttributedString.fromAnsi(file.getValue(KVlistOffset + cursorUD));
+        //lineText = AttributedString.fromAnsi(file.getValue(KVlistOffset + cursorUD));
         //writer.println(" " + lineText + " ");
         lineText.println(terminal);
 
