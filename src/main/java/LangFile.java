@@ -59,6 +59,14 @@ public class LangFile {
         return fileTreeMap.get(key);
     }
 
+    public String getValue(int idx) {
+        String key = getInitialValue()[0];
+        for(int i = 0; i < idx; i++) {
+            key = nextKeyValue(key)[0];
+        }
+        return fileTreeMap.get(key);
+    }
+
     public void setValue(String key, String value) {
         if (fileTreeMap.containsKey(key)) {
             fileTreeMap.put(key, value);

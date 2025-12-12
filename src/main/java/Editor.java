@@ -5,6 +5,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
 import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 import org.jline.utils.Display;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;
@@ -28,10 +29,10 @@ public class Editor {
     int KVlistOffset = 0;
     int KVlistOffsetPre = 0;
     int KVseparatorPos = 0;
-    String currentKey;
     int cursorLR;
     int cursorMoveLimit = 0;
     int cursorUD;
+    AttributedString lineText;
 
 
     enum Operation {LEFT, RIGHT, UP, DOWN, Z;};
@@ -45,7 +46,7 @@ public class Editor {
     }
 
     public void initializeEditor() throws IOException {
-        currentKey = file.getInitialValue()[0];
+        lineText = new AttributedString((" " + file.getInitialValue()[0] + " "), AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         terminal.puts(Capability.enter_ca_mode);
         terminal.flush();
@@ -104,30 +105,33 @@ public class Editor {
                     }
                     break;
                 case UP:
-                    if(KVlistOffsetPre > 0) {
-                        KVlistOffsetPre--;
-                        currentKey = file.previousKeyValue(currentKey)[0];
-                    }
+                    KVlistOffsetPre--;
                     break;
                 case DOWN:
-                    if(KVlistOffsetPre < parsedTreeMapData.size()) {
-                        KVlistOffsetPre++;
-                        currentKey = file.nextKeyValue(currentKey)[0];
-                    }
+                    KVlistOffsetPre++;
                     break;
             }
 
-            if(KVlistOffsetPre <= terminalSize.getRows()) {
-                cursorUD = KVlistOffsetPre;
-            } else if(KVlistOffsetPre >= parsedTreeMapData.size() - terminalSize.getRows()) {
-                cursorUD = KVlistOffset - KVlistOffsetPre - terminalSize.getRows();
-            } else {
-                KVlistOffset = KVlistOffsetPre;
+
+            if(cursorUD < terminalSize.getRows() - 1 && KVlistOffsetPre > KVlistOffset) {
+                KVlistOffsetPre--;
+                cursorUD++;
+            }   if(cursorUD > 0 && KVlistOffsetPre < KVlistOffset) {
+                KVlistOffsetPre++;
+                cursorUD--;
             }
 
+            if(KVlistOffsetPre < 0) {
+                KVlistOffsetPre = 0;
+            } if(KVlistOffsetPre > parsedTreeMapData.size() - terminalSize.getRows()) {
+                KVlistOffsetPre = parsedTreeMapData.size() - terminalSize.getRows();
+            }
+
+            KVlistOffset = KVlistOffsetPre;
+
             screenDisplay(false);
-            terminal.puts(Capability.cursor_address, 10,0);
-            writer.print(cursorUD + ":" + cursorLR + "|" + KVlistOffset + " ");
+            terminal.puts(Capability.cursor_address, 0,0);
+            writer.print("Up/Down " + cursorUD + ", Left/Right " + cursorLR + ", PreOffset " + KVlistOffsetPre + ", Offset " + KVlistOffset + " ");
             terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
 
             terminal.flush();
@@ -225,10 +229,15 @@ public class Editor {
         }
 
         terminal.puts(Capability.save_cursor);
-        terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos);
+        if(cursorUD > 1) {
+            terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos);
+        } else {
+            terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos);
+        }
         terminal.flush();
-
-        writer.println(currentKey + " " + (KVlistOffset + cursorUD));
+        lineText = AttributedString.fromAnsi(file.getValue(KVlistOffset + cursorUD));
+        //writer.println(" " + lineText + " ");
+        lineText.println(terminal);
 
         terminal.puts(Capability.restore_cursor);
 
