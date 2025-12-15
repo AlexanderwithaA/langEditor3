@@ -4,16 +4,12 @@ import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal.Signal;
-import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStyle;
-import org.jline.utils.Display;
-import org.jline.utils.InfoCmp;
+import org.jline.utils.*;
 import org.jline.utils.InfoCmp.Capability;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.jline.keymap.KeyMap.key;
 
 public class Editor {
@@ -32,7 +28,7 @@ public class Editor {
     int cursorLR;
     int cursorMoveLimit = 0;
     int cursorUD;
-    AttributedString lineText;
+    AttributedStringBuilder lineText;
 
 
     enum Operation {LEFT, RIGHT, UP, DOWN, Z;};
@@ -46,7 +42,7 @@ public class Editor {
     }
 
     public void initializeEditor() throws IOException {
-        lineText = new AttributedString((" " + file.getInitialValue()[0] + " "), AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+        lineText = new AttributedStringBuilder();
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
         terminal.puts(Capability.enter_ca_mode);
         terminal.flush();
@@ -129,9 +125,17 @@ public class Editor {
 
             KVlistOffset = KVlistOffsetPre;
 
+            AttributedStyle style = AttributedStyle.DEFAULT;
+            lineText.setLength(0);
+            lineText.styled(style.foreground(AttributedStyle.YELLOW), "-<");
+            lineText.styled(style.foreground(AttributedStyle.RED), file.getValue(cursorUD + KVlistOffset));
+            lineText.styled(style.foreground(AttributedStyle.YELLOW), ">-");
+
             screenDisplay(false);
             terminal.puts(Capability.cursor_address, 0,0);
-            writer.print("Up/Down " + cursorUD + ", Left/Right " + cursorLR + ", PreOffset " + KVlistOffsetPre + ", Offset " + KVlistOffset + " ");
+            writer.println(parsedTreeMapData.get(KVlistOffset)); // this fixes the display box not printing this line... for some reason
+            //terminal.puts(Capability.cursor_address, 0,0);
+            //writer.print("Up/Down " + cursorUD + ", Left/Right " + cursorLR + ", PreOffset " + KVlistOffsetPre + ", Offset " + KVlistOffset + " ");
             terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
 
             terminal.flush();
@@ -190,6 +194,8 @@ public class Editor {
         StringBuilder temp = new StringBuilder();
 
         for(int i = 0; i < keys.size(); i++) {
+            //test code
+            //temp.append(i);
             if(delimiterPos > 0) {
                 temp.append(keys.get(i).substring(0, Math.min(keys.get(i).length(), delimiterPos - 1)));
             }
@@ -230,9 +236,9 @@ public class Editor {
 
         terminal.puts(Capability.save_cursor);
         if(cursorUD > 1) {
-            terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos);
+            terminal.puts(Capability.cursor_address, cursorUD - 1, KVseparatorPos - 1);
         } else {
-            terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos);
+            terminal.puts(Capability.cursor_address, cursorUD + 1, KVseparatorPos - 1);
         }
         terminal.flush();
         //lineText = AttributedString.fromAnsi(file.getValue(KVlistOffset + cursorUD));
