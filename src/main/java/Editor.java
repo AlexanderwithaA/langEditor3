@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.jline.keymap.KeyMap.key;
 
 public class Editor {
@@ -31,7 +37,7 @@ public class Editor {
     AttributedStringBuilder lineText;
 
 
-    enum Operation {LEFT, RIGHT, UP, DOWN, Z;};
+    enum Operation {LEFT, RIGHT, UP, DOWN, Z}
     KeyMap<Operation> keyMap = new KeyMap<>();
 
     List<AttributedString> parsedTreeMapData;
@@ -58,13 +64,24 @@ public class Editor {
             System.out.println("nuh-uh");
         });
 
-        //int lastWidth = terminalSize.getColumns();
+        AtomicBoolean submitInput = new AtomicBoolean(false);
+        AtomicIntegerArray userInput = new AtomicIntegerArray();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            ArrayList input = new ArrayList();
+            while(true) {
+                if(submitInput.get()) {
+                    userInput.set(input);
+
+                    input.setLength(0);
+                }
+            }
+        });
 
         terminal.handle(Signal.WINCH, signal -> {
             terminalSize = terminal.getSize();
 
-            //if(Math.abs(terminalSize.getColumns() - lastWidth) > 5) {
-            //    lastWidth = terminalSize.getColumns();
                 KVseparatorPos = terminalSize.getColumns()/4;
                 keyValueBox.resize(terminalSize.getRows(),terminalSize.getColumns());
                 cursorMoveLimit = terminalSize.getRows() - 4;
