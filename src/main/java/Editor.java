@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.jline.keymap.KeyMap.key;
@@ -22,7 +21,7 @@ public class Editor {
 
     Terminal terminal;
     PrintWriter writer;
-    //LineReader reader;
+    NonBlockingReader reader;
     Size terminalSize;
     LangFile file;
     LangFile newFile;
@@ -50,11 +49,11 @@ public class Editor {
     public void initializeEditor() throws IOException {
         lineText = new AttributedStringBuilder();
         terminal = TerminalBuilder.builder().name("BTA Language Pack Editor").system(true).type("ansi").build();
-        terminal.puts(Capability.enter_ca_mode);
+        //terminal.puts(Capability.enter_ca_mode);
         terminal.flush();
         keyValueBox = new Display(terminal, false);
         writer = terminal.writer();
-        //reader = LineReaderBuilder.builder().terminal(terminal).build();
+        reader = terminal.reader();
         terminalSize = terminal.getSize();
 
         screenDisplay(true);
@@ -64,17 +63,29 @@ public class Editor {
             System.out.println("nuh-uh");
         });
 
-        AtomicBoolean submitInput = new AtomicBoolean(false);
-        AtomicIntegerArray userInput = new AtomicIntegerArray();
+        // There is no "AtomicTrinary" so I'm using an integer. 0 tells the thread to run,
+        // 1 tells the thread to stop, 2 indicates that the thread has received the stop
+        AtomicInteger submitInput = new AtomicInteger(0);
+        AtomicReference<AttributedStringBuilder> inputString = new AtomicReference<>();
+        inputString.set(new AttributedStringBuilder());
+
+        //enum badInput {}
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
-            ArrayList input = new ArrayList();
             while(true) {
-                if(submitInput.get()) {
-                    userInput.set(input);
-
-                    input.setLength(0);
+                if(submitInput.get() >= 1) {
+                    submitInput.set(2);
+                    while(submitInput.get() == 2);
+                } else {
+                    //if(reader.peek(0) ) {
+                        int c = reader.read();
+                        inputString.updateAndGet(v -> v.append((char) c));
+                        terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
+                        terminal.puts(Capability.clr_eol);
+                        writer.print(inputString.get());
+                        writer.flush();
+                    //}
                 }
             }
         });
