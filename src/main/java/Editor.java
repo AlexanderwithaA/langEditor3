@@ -36,7 +36,7 @@ public class Editor {
     AttributedStringBuilder lineText;
 
 
-    enum Operation {LEFT, RIGHT, UP, DOWN, Z}
+    public enum Operation {LEFT, RIGHT, UP, DOWN, Z}
     KeyMap<Operation> keyMap = new KeyMap<>();
 
     List<AttributedString> parsedTreeMapData;
@@ -69,8 +69,6 @@ public class Editor {
         AtomicReference<AttributedStringBuilder> inputString = new AtomicReference<>();
         inputString.set(new AttributedStringBuilder());
 
-        //enum badInput {}
-
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             while(true) {
@@ -78,8 +76,10 @@ public class Editor {
                     submitInput.set(2);
                     while(submitInput.get() == 2);
                 } else {
-                    //if(reader.peek(0) ) {
-                        int c = reader.read();
+                    Operation op;
+                    BindingReader bindingReader = new BindingReader(terminal.reader());
+                    op = bindingReader.readBinding(keyMap);
+                    if(EnumUtils.isValidEnum(MyEnum.class, myValue))
                         inputString.updateAndGet(v -> v.append((char) c));
                         terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
                         terminal.puts(Capability.clr_eol);
@@ -112,7 +112,7 @@ public class Editor {
         keyMap.bind(Operation.DOWN, key(terminal, Capability.key_down));
         keyMap.bind(Operation.Z, "z");
 
-        Operation op = bindingReader.readBinding(keyMap);
+        Operation op;
 
         while (true) {
 
