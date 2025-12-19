@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.EnumUtils;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Size;
@@ -36,7 +37,7 @@ public class Editor {
     AttributedStringBuilder lineText;
 
 
-    public enum Operation {LEFT, RIGHT, UP, DOWN, Z}
+    enum Operation {LEFT, RIGHT, UP, DOWN, Z}
     KeyMap<Operation> keyMap = new KeyMap<>();
 
     List<AttributedString> parsedTreeMapData;
@@ -76,10 +77,10 @@ public class Editor {
                     submitInput.set(2);
                     while(submitInput.get() == 2);
                 } else {
-                    Operation op;
+                    Editor.Operation op;
                     BindingReader bindingReader = new BindingReader(terminal.reader());
                     op = bindingReader.readBinding(keyMap);
-                    if(EnumUtils.isValidEnum(MyEnum.class, myValue))
+                    if(EnumUtils.isValidEnum(Operation, op))
                         inputString.updateAndGet(v -> v.append((char) c));
                         terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
                         terminal.puts(Capability.clr_eol);
