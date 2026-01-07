@@ -1,3 +1,4 @@
+import javafx.application.Application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ public class Main {
         lfc.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
         Editor terminal  = new Editor("strings.lang");
         terminal.initializeEditor();
+
+        Application.launch();
 
 
 //        Object handle = Signals.register("INT", () -> {

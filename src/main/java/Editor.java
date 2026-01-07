@@ -66,30 +66,30 @@ public class Editor {
 
         // There is no "AtomicTrinary" so I'm using an integer. 0 tells the thread to run,
         // 1 tells the thread to stop, 2 indicates that the thread has received the stop
-        AtomicInteger submitInput = new AtomicInteger(0);
-        AtomicReference<AttributedStringBuilder> inputString = new AtomicReference<>();
-        inputString.set(new AttributedStringBuilder());
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            while(true) {
-                if(submitInput.get() >= 1) {
-                    submitInput.set(2);
-                    while(submitInput.get() == 2);
-                } else {
-                    Editor.Operation op;
-                    BindingReader bindingReader = new BindingReader(terminal.reader());
-                    op = bindingReader.readBinding(keyMap);
-                    if(EnumUtils.isValidEnum(Operation, op))
-                        inputString.updateAndGet(v -> v.append((char) c));
-                        terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
-                        terminal.puts(Capability.clr_eol);
-                        writer.print(inputString.get());
-                        writer.flush();
-                    //}
-                }
-            }
-        });
+//        AtomicInteger submitInput = new AtomicInteger(0);
+//        AtomicReference<AttributedStringBuilder> inputString = new AtomicReference<>();
+//        inputString.set(new AttributedStringBuilder());
+//
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.submit(() -> {
+//            while(true) {
+//                if(submitInput.get() >= 1) {
+//                    submitInput.set(2);
+//                    while(submitInput.get() == 2);
+//                } else {
+//                    Editor.Operation op;
+//                    BindingReader bindingReader = new BindingReader(terminal.reader());
+//                    op = bindingReader.readBinding(keyMap);
+//                    if(EnumUtils.isValidEnum(Operation, op))
+//                        inputString.updateAndGet(v -> v.append((char) c));
+//                        terminal.puts(Capability.cursor_address, cursorUD, cursorLR);
+//                        terminal.puts(Capability.clr_eol);
+//                        writer.print(inputString.get());
+//                        writer.flush();
+//                    //}
+//                }
+//            }
+//        });
 
         terminal.handle(Signal.WINCH, signal -> {
             terminalSize = terminal.getSize();
