@@ -1,6 +1,9 @@
 import javafx.application.Application;
+import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 //can listen for keystrokes with the stage
@@ -11,10 +14,16 @@ public class FXwindow extends Application{
     public void start(Stage stage) throws Exception {
         stage.setTitle("BTA Language Pack Editor");
 
-        Label label = new Label("hi");
-        Scene scene = new Scene(label, 400,300);
-        stage.setScene(scene);
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/langEditorPanel2.fxml"));
+        Scene scene = new Scene(root);
 
+        stage.setScene(scene);
         stage.show();
     }
+
+    @FXML
+    public void buttonClicked(Event e) {
+        System.out.println("input");
+    }
 }
+
