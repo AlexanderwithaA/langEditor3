@@ -4,11 +4,20 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
 
 //can listen for keystrokes with the stage
 
 public class FXwindow extends Application{
+
+    Stage stage;
+    LangFileCollection lfc;
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -24,6 +33,22 @@ public class FXwindow extends Application{
     @FXML
     public void buttonClicked(Event e) {
         System.out.println("input");
+    }
+
+    @FXML
+    private Button jarFileSelectButton;
+
+    public void C_openFile() throws IOException {
+        System.out.println("test");
+
+        final FileChooser filechooser = new FileChooser();
+        filechooser.setTitle("Select Jar File For Resource Extraction");
+        File file = filechooser.showOpenDialog(stage);
+
+        final LangFileCollection initLfc = new LangFileCollection();
+        lfc = initLfc;
+
+        lfc.jarScanner(file);
     }
 }
 

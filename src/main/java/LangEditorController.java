@@ -1,15 +1,12 @@
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+
 import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 public class LangEditorController {
 
-    @FXML
-    private Button jarFileSelectButton;
 
-    public void openFile() {
-        System.out.println("test");
-        //Desktop temp = new Desktop();
-        //temp.browse();
-    }
 }

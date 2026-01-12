@@ -1,5 +1,12 @@
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 public class LangFileCollection {
 
@@ -63,5 +70,18 @@ public class LangFileCollection {
 //        temp.dropAllValues();
 //        return temp;
 //    }
+
+    public void jarScanner(File file) throws IOException {
+        JarFile jarScanner = new JarFile(file);
+        Manifest manifest = new Manifest(jarScanner.getManifest());
+
+        Map<String, Attributes> entries = manifest.getEntries();
+        Object[] temp1 = entries.keySet().toArray();
+        Object[] temp2 = entries.entrySet().toArray();
+
+        for(int i = 0; i < temp1.length; i++) {
+            System.out.println(temp1[i] + " | " + temp2[i]);
+        }
+    }
 
 }
