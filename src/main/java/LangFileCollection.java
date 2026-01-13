@@ -1,9 +1,6 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -11,6 +8,7 @@ import java.util.jar.Manifest;
 public class LangFileCollection {
 
     HashMap<String, LangFile> fileMap = new HashMap<>();
+    final String[] implementationVersions = {"7.3_04"};
 
     public void populateCollection(String input) {
         if (!input.isBlank()) {
@@ -74,13 +72,19 @@ public class LangFileCollection {
     public void jarScanner(File file) throws IOException {
         JarFile jarScanner = new JarFile(file);
         Manifest manifest = new Manifest(jarScanner.getManifest());
+        boolean validJar = false;
 
-        Map<String, Attributes> entries = manifest.getEntries();
-        Object[] temp1 = entries.keySet().toArray();
-        Object[] temp2 = entries.entrySet().toArray();
+        for(String value : implementationVersions) {
+            if(value.equals(manifest.getMainAttributes().getValue("Implementation-Version"))) {
+                validJar = true;
+                break;
+            }
+        }
 
-        for(int i = 0; i < temp1.length; i++) {
-            System.out.println(temp1[i] + " | " + temp2[i]);
+        if(validJar) {
+            //jarScanner.getJarEntry("assets/minecraft/textures/gui/title");
+        } else {
+            //invalid jar warning here.
         }
     }
 
