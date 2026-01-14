@@ -1,9 +1,13 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.jar.Attributes;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class LangFileCollection {
 
@@ -11,46 +15,46 @@ public class LangFileCollection {
     final String[] implementationVersions = {"7.3_04"};
 
     public void populateCollection(String input) {
-        if (!input.isBlank()) {
-            File file = new File(input);
-            intermediateCheck(file);
-        }
+//        if (!input.isBlank()) {
+//            File file = new File(input);
+//            intermediateCheck(file);
+//        }
     }
+//
+//    public void populateCollection(String[] args) {
+//        for (String input : args) {
+//            if (!input.isBlank()) {
+//                File file = new File(input);
+//                intermediateCheck(file);
+//            }
+//        }
+//    }
 
-    public void populateCollection(String[] args) {
-        for (String input : args) {
-            if (!input.isBlank()) {
-                File file = new File(input);
-                intermediateCheck(file);
-            }
-        }
-    }
-
-    private void intermediateCheck(File file) {
-        if (file.exists()) {
-            if (file.isFile()) {
-                if(file.getName().substring(file.getName().lastIndexOf(".") + 1).equals("lang")) {
-                    insertFile(file);
-                } else {
-//                    System.out.println("Man...\nwhat's this piece of junk? This " + file.getName() + "???\nGet that junk outta here! I DON'T LIKE "
-//                            + file.getName().substring(file.getName().lastIndexOf(".") + 1) + "'s!");
-                }
-            } else if (file.isDirectory()) {
-                File[] directoryListing = file.listFiles();
-                if (directoryListing != null) {
-                    for (File item : directoryListing) {
-                        intermediateCheck(item); //Nested function calling >:)
-                    }
-                }
-            }
-        }
-    }
+//    private void intermediateCheck(File file) {
+//        if (file.exists()) {
+//            if (file.isFile()) {
+//                if(file.getName().substring(file.getName().lastIndexOf(".") + 1).equals("lang")) {
+//                    insertFile(file);
+//                } else {
+////                    System.out.println("Man...\nwhat's this piece of junk? This " + file.getName() + "???\nGet that junk outta here! I DON'T LIKE "
+////                            + file.getName().substring(file.getName().lastIndexOf(".") + 1) + "'s!");
+//                }
+//            } else if (file.isDirectory()) {
+//                File[] directoryListing = file.listFiles();
+//                if (directoryListing != null) {
+//                    for (File item : directoryListing) {
+//                        intermediateCheck(item); //Nested function calling >:)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private void insertFile(File path) {
         String name = path.getName();
         if(!fileMap.containsKey(name)) {
             fileMap.put(name, new LangFile(path));
-            fileMap.put("__" + name, new LangFile(path));
+            //fileMap.put("__" + name, new LangFile(path));
         }
     }
 
@@ -82,7 +86,15 @@ public class LangFileCollection {
         }
 
         if(validJar) {
-            //jarScanner.getJarEntry("assets/minecraft/textures/gui/title");
+            for (Enumeration<JarEntry> enumStructure = jarScanner.entries(); enumStructure.hasMoreElements();) {
+                JarEntry entry = enumStructure.nextElement();
+                if(entry.getName().endsWith(".lang") || entry.getName().endsWith("splashes.txt")) {
+                    System.out.println(entry.getName());
+
+                    InputStream stream = jarScanner.getInputStream(entry);
+
+                }
+            }
         } else {
             //invalid jar warning here.
         }
