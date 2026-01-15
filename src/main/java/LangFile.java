@@ -1,38 +1,27 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BiFunction;
 
 public class LangFile {
 
-    File filePath;
+    String name;
     TreeMap<String,String> fileTreeMap;
 
-    public LangFile(File path) {
-        filePath = path;
-        populateTreeMap();
-//        printTreeMap();
-//        System.out.println(getSubKey("options.difficulty").toString());
-//        System.out.println(getSubKey("optio").toString());
-//        System.out.println(getSubKey("options.video").toString());
-//        System.out.println(getSubKey("options.renderDistance").toString());
-//        System.out.println(nextKeyValue("key.autoWalk")[0]);
-//        System.out.println(previousKeyValue("performance.vsync")[0]);
+    public LangFile(String fileName, BufferedReader inputStream) {
+        name = fileName;
+        populateTreeMap(inputStream);
     }
 
-    private void populateTreeMap() {
+    private void populateTreeMap(BufferedReader inputStream) {
         fileTreeMap = new TreeMap<>();
         try {
-            BufferedReader nextLine = new BufferedReader(new FileReader(filePath));
             String line;
-            while((line = nextLine.readLine()) != null) {
+            while((line = inputStream.readLine()) != null) {
                 if(!line.isBlank()) {
                     fileTreeMap.put(line.split("=", 2)[0],line.split("=", 2)[1]);
                 }
             }
-            nextLine.close();
+            inputStream.close();
         } catch(IOException error){
             System.out.println(error);
         }

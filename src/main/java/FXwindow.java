@@ -39,8 +39,6 @@ public class FXwindow extends Application{
     private Button jarFileSelectButton;
 
     public void C_openFile() throws IOException {
-        System.out.println("test");
-
         final FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select Jar File For Resource Extraction");
         File file = filechooser.showOpenDialog(stage);

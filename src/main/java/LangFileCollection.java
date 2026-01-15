@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -50,13 +48,12 @@ public class LangFileCollection {
 //        }
 //    }
 
-    private void insertFile(File path) {
-        String name = path.getName();
-        if(!fileMap.containsKey(name)) {
-            fileMap.put(name, new LangFile(path));
-            //fileMap.put("__" + name, new LangFile(path));
-        }
-    }
+//    private void insertFile(File path) {
+//        if(!fileMap.containsKey(fileName)) {
+//            fileMap.put(fileName, new LangFile(fileName, inputStream));
+//            //fileMap.put("__" + name, new LangFile(path));
+//        }
+//    }
 
     public String[] getFileNames() {
          return fileMap.keySet().toArray(new String[0]);
@@ -86,15 +83,25 @@ public class LangFileCollection {
         }
 
         if(validJar) {
+            BufferedReader inputReader = null;
+
             for (Enumeration<JarEntry> enumStructure = jarScanner.entries(); enumStructure.hasMoreElements();) {
                 JarEntry entry = enumStructure.nextElement();
-                if(entry.getName().endsWith(".lang") || entry.getName().endsWith("splashes.txt")) {
-                    System.out.println(entry.getName());
+                if(entry.getName().endsWith(".lang")) {
+                    inputReader = new BufferedReader(new InputStreamReader(jarScanner.getInputStream(entry)));
 
-                    InputStream stream = jarScanner.getInputStream(entry);
+                    System.out.println(entry.getName() + " | " + inputReader.readLine());
 
+                    if(!fileMap.containsKey(entry.getName())) {
+                        fileMap.put(entry.getName(), new LangFile(entry.getName(), inputReader));
+                    }
+                }
+                if(entry.getName().endsWith("splashes.txt")) {
+                    //I need to make a class for the splashes file...
                 }
             }
+            jarScanner.close();
+            inputReader.close();
         } else {
             //invalid jar warning here.
         }
