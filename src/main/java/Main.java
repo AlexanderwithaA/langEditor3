@@ -6,17 +6,17 @@ import java.util.Set;
 
 public class Main {
 
-    static LangFileCollection lfc;
-
-    public static void main(String[] args) throws IOException {
-
-        lfc = new LangFileCollection();
-
-        lfc.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
-        Editor terminal  = new Editor("strings.lang");
-        terminal.initializeEditor();
-
-        Application.launch();
+//    static LangFileCollection lfc;
+//
+//    public static void main(String[] args) throws IOException {
+//
+//        lfc = new LangFileCollection();
+//
+//        lfc.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
+//        Editor terminal  = new Editor("strings.lang");
+//        terminal.initializeEditor();
+//
+//        Application.launch();
 
 
 //        Object handle = Signals.register("INT", () -> {
@@ -26,6 +26,6 @@ public class Main {
 
 
 
-    }
+//    }
 
 }

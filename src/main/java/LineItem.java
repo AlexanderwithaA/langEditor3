@@ -1,19 +1,19 @@
-public class LineItem {
+public class LineItem implements LineItemType {
 
-    protected final String type = "LINE_ITEM";
-    protected String reference;
-    protected String contents;
+    private final lineItemTypeEnums type = lineItemTypeEnums.LINE_ITEM;
+    private final String oldContents;
+    private String contents;
 
-    public LineItem(String reference1) {
-        reference = reference1;
+    public LineItem(String oldContents1) {
+        oldContents = oldContents1;
     }
 
     public String getType() {
-        return type;
+        return type.toString();
     }
 
-    public String getReference() {
-        return reference;
+    public String getOldContents() {
+        return oldContents;
     }
 
     public String getContents() {

@@ -1,0 +1,7 @@
+public enum lineItemTypeEnums {
+    LINE_ITEM,
+    LANG_LINE_ITEM,
+    COMMENTED_LINE_ITEM,
+    UNKNOWN_LINE_ITEM,
+    BLANK_LINE_ITEM
+}
