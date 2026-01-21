@@ -16,8 +16,6 @@ import java.io.IOException;
 public class FXwindow extends Application{
 
     Stage stage;
-    LangFileCollection lfc;
-
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -42,11 +40,8 @@ public class FXwindow extends Application{
         final FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select Jar File For Resource Extraction");
         File file = filechooser.showOpenDialog(stage);
+        FileCollection fileCollection = Main.getFileCollection();
 
-        final LangFileCollection initLfc = new LangFileCollection();
-        lfc = initLfc;
-
-        lfc.jarScanner(file);
     }
 }
 

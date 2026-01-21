@@ -6,26 +6,17 @@ import java.util.Set;
 
 public class Main {
 
-//    static LangFileCollection lfc;
-//
-//    public static void main(String[] args) throws IOException {
-//
-//        lfc = new LangFileCollection();
-//
-//        lfc.populateCollection("C:\\Users\\N112Student\\Documents\\AsCS\\AlexCode\\langEditor\\en_US\\en_US");
-//        Editor terminal  = new Editor("strings.lang");
-//        terminal.initializeEditor();
-//
-//        Application.launch();
+    static FXwindow programWindow;
+    static FileCollection fileCollection;
 
+    public static void main(String[] args) {
 
-//        Object handle = Signals.register("INT", () -> {
-//            System.out.println("Caught SIGINT");
-//            // Perform cleanup
-//        });
+        fileCollection = new FileCollection();
+        programWindow = new FXwindow();
 
+    }
 
-
-//    }
-
+    public static FileCollection getFileCollection() {
+        return fileCollection;
+    }
 }

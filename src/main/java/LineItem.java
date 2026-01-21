@@ -4,8 +4,8 @@ public class LineItem implements LineItemType {
     private final String oldContents;
     private String contents;
 
-    public LineItem(String oldContents1) {
-        oldContents = oldContents1;
+    public LineItem(String oldContents) {
+        this.oldContents = oldContents;
     }
 
     public String getType() {

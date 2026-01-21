@@ -3,11 +3,11 @@ public class CommentedLineItem implements LineItemType{
     private final lineItemTypeEnums type = lineItemTypeEnums.COMMENTED_LINE_ITEM;
     private final String contents;
 
-    public CommentedLineItem(String contents1) {
-        if(!contents1.isBlank() && contents1.startsWith("#")) {
-            contents1 = contents1.substring(1);
+    public CommentedLineItem(String contents) {
+        if(!contents.isBlank() && contents.startsWith("#")) {
+            contents = contents.substring(1);
         }
-        contents = contents1;
+        this.contents = contents;
     }
 
     public String getType() {

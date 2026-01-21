@@ -36,11 +36,13 @@ public class File {
             }
 
             if(fileType == fileTypeEnum.LANG) {
-                String key;
-                String value;
+                String key = "";
+                String value = "";
+
                 if(line.split("=", 2)[0].equals(line.split("=", 2)[0].toLowerCase())) {
                     key = line.split("=", 2)[0];
                 }
+
                 if(line.split("=", 2).length > 1) {
                     value = line.split("=", 2)[1];
                 } else {
@@ -52,6 +54,27 @@ public class File {
                     continue;
                 }
             }
+
+            if(fileType == fileTypeEnum.TXT) {
+                fileContents.add(new LineItem(line));
+                continue;
+            }
+
+            System.out.println("WOAH THERE!! Looks like the line \"" + line + "\" didn't get picked up by any of the checks and is going to be made into a "
+                    + lineItemTypeEnums.UNKNOWN_LINE_ITEM + "!");
+            fileContents.add(new UnknownLineItem(line));
         }
+
+        input.close();
     }
+
+    public int getFileLength() {
+        return fileContents.size();
+    }
+
+    public Object passLineItemObject(int index) {
+        return fileContents.get(index);
+    }
+
+
 }

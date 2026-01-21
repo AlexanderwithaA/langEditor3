@@ -5,9 +5,9 @@ public class LangLineItem implements LineItemType {
     private final String oldValue;
     private String newValue;
 
-    public LangLineItem(String key1, String oldValue1) {
-        key = key1;
-        oldValue = oldValue1;
+    public LangLineItem(String key, String oldValue) {
+        this.key = key;
+        this.oldValue = oldValue;
     }
 
     public String getType() {
@@ -26,7 +26,7 @@ public class LangLineItem implements LineItemType {
         return newValue;
     }
 
-    public void setNewValue(String newValue1) {
-        newValue = newValue1;
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
     }
 }
