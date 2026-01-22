@@ -10,7 +10,7 @@ public class FileContainer {
         TXT
     }
 
-    private List<Object> fileContents = new ArrayList<Object>();
+    private final List<Object> fileContents = new ArrayList<>();
     private fileTypeEnum fileType;
 
     public FileContainer(String path, BufferedReader input) throws IOException {
@@ -41,7 +41,7 @@ public class FileContainer {
 
             if(fileType == fileTypeEnum.LANG) {
                 String key = "";
-                String value = "";
+                String value;
 
                 if(line.split("=", 2)[0].equals(line.split("=", 2)[0].toLowerCase())) {
                     key = line.split("=", 2)[0];
