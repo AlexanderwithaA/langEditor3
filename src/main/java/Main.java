@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -62,8 +63,8 @@ public class Main extends Application {
 
         VBox selectorContainer = new VBox(filePane, jarSelectionBox);
 
-
-        ScrollPane contentsPane = new ScrollPane();
+        VBox contents = new VBox();
+        ScrollPane contentsPane = new ScrollPane(contents);
 
         SplitPane workspace = new SplitPane(selectorContainer, contentsPane);
         VBox root = new VBox(menuBar, workspace);
@@ -133,8 +134,32 @@ public class Main extends Application {
     private void openFileContents(String id) {
         FileContainer container = fileCollection.getFile(id);
         for(int i = 0; i < container.getFileLength(); i++) {
-            if (container.passLineItemObject(i) instanceof LineItemType) {
-                System.out.println(((LineItemType) container.passLineItemObject(i)).getType());
+            createLineItemBox(container.passLineItemObject(i));
+        }
+    }
+
+    private void createLineItemBox(Object item) {
+        GridPane pane = new GridPane(4,4);
+
+        if(item instanceof LineItemType) {
+            switch(((LineItemType) item).getType()) {
+                case LINE_ITEM:
+                    Label text = new Label(((LineItem) item).getOldContents());
+                    TextField field = new TextField();
+                    pane.add(text, 0,0);
+                    pane.add(field, 2,0);
+                    break;
+                case LANG_LINE_ITEM:
+                    break;
+                case COMMENTED_LINE_ITEM:
+                    Label text = new Label(((CommentedLineItem) item).getContents());
+                    pane.add(text, 0,0);
+                    GridPane.setColumnSpan(text, 3);
+                    break;
+                case BLANK_LINE_ITEM:
+                    break;
+                case UNKNOWN_LINE_ITEM:
+                    break;
             }
         }
     }

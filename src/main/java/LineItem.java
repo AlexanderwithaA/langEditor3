@@ -8,8 +8,8 @@ public class LineItem implements LineItemType {
         this.oldContents = oldContents;
     }
 
-    public String getType() {
-        return type.toString();
+    public lineItemTypeEnums getType() {
+        return lineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getOldContents() {

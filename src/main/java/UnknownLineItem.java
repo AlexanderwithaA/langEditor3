@@ -7,8 +7,8 @@ public class UnknownLineItem implements LineItemType{
         this.contents = contents;
     }
 
-    public String getType() {
-        return type.toString();
+    public lineItemTypeEnums getType() {
+        return lineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getContents() {

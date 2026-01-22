@@ -1,4 +1,4 @@
 public interface LineItemType {
-    String getType();
+    lineItemTypeEnums getType();
 }
 

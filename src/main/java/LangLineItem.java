@@ -10,8 +10,8 @@ public class LangLineItem implements LineItemType {
         this.oldValue = oldValue;
     }
 
-    public String getType() {
-        return type.toString();
+    public lineItemTypeEnums getType() {
+        return lineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getKey() {
