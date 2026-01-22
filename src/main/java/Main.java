@@ -140,11 +140,12 @@ public class Main extends Application {
 
     private void createLineItemBox(Object item) {
         GridPane pane = new GridPane(4,4);
+        Label text;
 
         if(item instanceof LineItemType) {
             switch(((LineItemType) item).getType()) {
                 case LINE_ITEM:
-                    Label text = new Label(((LineItem) item).getOldContents());
+                    text = new Label(((LineItem) item).getOldContents());
                     TextField field = new TextField();
                     pane.add(text, 0,0);
                     pane.add(field, 2,0);
@@ -152,7 +153,7 @@ public class Main extends Application {
                 case LANG_LINE_ITEM:
                     break;
                 case COMMENTED_LINE_ITEM:
-                    Label text = new Label(((CommentedLineItem) item).getContents());
+                    text = new Label(((CommentedLineItem) item).getContents());
                     pane.add(text, 0,0);
                     GridPane.setColumnSpan(text, 3);
                     break;
