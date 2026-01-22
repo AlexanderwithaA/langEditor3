@@ -43,8 +43,8 @@ public class Editor {
     List<AttributedString> parsedTreeMapData;
 
     Editor(String fileString) {
-        file = Main.lfc.loadFile(fileString);
-        newFile = Main.lfc.loadFile("__" + fileString);
+//        file = Main.lfc.loadFile(fileString);
+//        newFile = Main.lfc.loadFile("__" + fileString);
     }
 
     public void initializeEditor() throws IOException {

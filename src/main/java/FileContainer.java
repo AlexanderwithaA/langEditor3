@@ -1,18 +1,19 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class File {
+public class FileContainer {
 
     enum fileTypeEnum {
         LANG,
         TXT
     }
 
-    private ArrayList<Object> fileContents;
+    private List<Object> fileContents = new ArrayList<Object>();
     private fileTypeEnum fileType;
 
-    public File(String path, BufferedReader input) throws IOException {
+    public FileContainer(String path, BufferedReader input) throws IOException {
         if(path.endsWith(".lang")) {
             fileType = fileTypeEnum.LANG;
         } if(path.endsWith(".txt")) {
@@ -25,6 +26,9 @@ public class File {
     private void populateFileContents(BufferedReader input) throws IOException {
         while(input.ready()) {
             String line = input.readLine();
+
+            System.out.println(line);
+
             if(line.isBlank()) {
                 fileContents.add(new BlankLineItem());
                 continue;
