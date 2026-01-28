@@ -48,7 +48,6 @@ public class Main extends Application {
         MenuBar menuBar = new MenuBar(fileMenu, editMenu, helpMenu);
 
         ListView<Button> fileList = new ListView<>(buttons);
-        ScrollPane filePane = new ScrollPane(fileList);
 
         Label selectedJar = new Label();
         selectedJar.textProperty().bind(labelText);
@@ -58,15 +57,15 @@ public class Main extends Application {
 
         VBox.setMargin(jarSelectionBox, new Insets(10));
         jarSelectionBox.setSpacing(4);
-        VBox.setVgrow(filePane, Priority.ALWAYS);
         VBox.setVgrow(fileList, Priority.ALWAYS);
 
-        VBox selectorContainer = new VBox(filePane, jarSelectionBox);
+        VBox selectorContainer = new VBox(fileList, jarSelectionBox);
 
         VBox contents = new VBox();
         ScrollPane contentsPane = new ScrollPane(contents);
 
         SplitPane workspace = new SplitPane(selectorContainer, contentsPane);
+        workspace.setDividerPositions((double) 2/7);
         VBox root = new VBox(menuBar, workspace);
 
         VBox.setVgrow(workspace, Priority.ALWAYS);
@@ -132,36 +131,43 @@ public class Main extends Application {
     }
 
     private void openFileContents(String id) {
-        FileContainer container = fileCollection.getFile(id);
-        for(int i = 0; i < container.getFileLength(); i++) {
-            createLineItemBox(container.passLineItemObject(i));
-        }
+        createLineItemBoxes(fileCollection.getFile(id));
     }
 
-    private void createLineItemBox(Object item) {
+    private void createLineItemBoxes(FileContainer container) {
         GridPane pane = new GridPane(4,4);
-        Label text;
 
-        if(item instanceof LineItemType) {
-            switch(((LineItemType) item).getType()) {
-                case LINE_ITEM:
-                    text = new Label(((LineItem) item).getOldContents());
-                    TextField field = new TextField();
-                    pane.add(text, 0,0);
-                    pane.add(field, 2,0);
-                    break;
-                case LANG_LINE_ITEM:
-                    break;
-                case COMMENTED_LINE_ITEM:
-                    text = new Label(((CommentedLineItem) item).getContents());
-                    pane.add(text, 0,0);
-                    GridPane.setColumnSpan(text, 3);
-                    break;
-                case BLANK_LINE_ITEM:
-                    break;
-                case UNKNOWN_LINE_ITEM:
-                    break;
+        for(int i = 0; i < container.getFileLength(); i++) {
+            Object item = container.passLineItemObject(i);
+            Label item1 = null;
+            Label item2 = null;
+            TextField item3 = null;
+
+            if (item instanceof LineItemType) {
+                switch (((LineItemType) item).getType()) {
+                    case LINE_ITEM:
+                        item2 = new Label(((LineItem) item).getOldContents());
+                        item3 = new TextField();
+                        break;
+                    case LANG_LINE_ITEM:
+                        item1 = new Label(((LangLineItem) item).getKey());
+                        item2 = new Label(((LangLineItem) item).getOldValue());
+                        item3 = new TextField();
+                        break;
+                    case COMMENTED_LINE_ITEM:
+                        item2 = new Label(((CommentedLineItem) item).getContents());
+                        break;
+                    case BLANK_LINE_ITEM:
+                        break;
+                    case UNKNOWN_LINE_ITEM:
+                        item1 = new Label("unknown item:");
+                        item2 = new Label(((UnknownLineItem) item).getContents());
+                        break;
+                }
             }
+            pane.add(item1,0,i);
+            pane.add(item2,1,i);
+            pane.add(item3,2,i);
         }
     }
 }
