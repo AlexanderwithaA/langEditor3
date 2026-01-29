@@ -7,9 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -30,6 +29,7 @@ public class Main extends Application {
     private final FileChooser fileChooser = new FileChooser();
     private final ObservableList<Button> buttons = FXCollections.observableArrayList();
     private final StringProperty labelText = new SimpleStringProperty("Jar: No Jar Selected");
+    private final ScrollPane contentsPane = new ScrollPane();
 
     public static void main(String[] args) {
         launch(args);
@@ -61,8 +61,7 @@ public class Main extends Application {
 
         VBox selectorContainer = new VBox(fileList, jarSelectionBox);
 
-        VBox contents = new VBox();
-        ScrollPane contentsPane = new ScrollPane(contents);
+        //VBox contents = new VBox();
 
         SplitPane workspace = new SplitPane(selectorContainer, contentsPane);
         workspace.setDividerPositions((double) 2/7);
@@ -135,7 +134,17 @@ public class Main extends Application {
     }
 
     private void createLineItemBoxes(FileContainer container) {
-        GridPane pane = new GridPane(4,4);
+        GridPane pane = new GridPane();
+        ColumnConstraints column = new ColumnConstraints();
+        column.setPercentWidth((double) 3 / 1);
+        pane.getColumnConstraints().add(column);
+
+        pane.setPadding(new Insets(10));
+//        RowConstraints row = new RowConstraints();
+//        row.setMinHeight(50);
+//        pane.getRowConstraints().add(row);
+
+        pane.setVgap(4);
 
         for(int i = 0; i < container.getFileLength(); i++) {
             Object item = container.passLineItemObject(i);
@@ -147,27 +156,40 @@ public class Main extends Application {
                 switch (((LineItemType) item).getType()) {
                     case LINE_ITEM:
                         item2 = new Label(((LineItem) item).getOldContents());
+                        item2.setWrapText(true);
+                        item2.setTextAlignment(TextAlignment.CENTER);
                         item3 = new TextField();
                         break;
                     case LANG_LINE_ITEM:
                         item1 = new Label(((LangLineItem) item).getKey());
+                        item1.setWrapText(true);
+                        item1.setTextAlignment(TextAlignment.CENTER);
                         item2 = new Label(((LangLineItem) item).getOldValue());
+                        item2.setWrapText(true);
+                        item2.setTextAlignment(TextAlignment.CENTER);
                         item3 = new TextField();
                         break;
                     case COMMENTED_LINE_ITEM:
                         item2 = new Label(((CommentedLineItem) item).getContents());
+                        item2.setWrapText(true);
+                        item2.setTextAlignment(TextAlignment.CENTER);
                         break;
                     case BLANK_LINE_ITEM:
                         break;
                     case UNKNOWN_LINE_ITEM:
                         item1 = new Label("unknown item:");
+                        item1.setWrapText(true);
+                        item1.setTextAlignment(TextAlignment.CENTER);
                         item2 = new Label(((UnknownLineItem) item).getContents());
+                        item2.setWrapText(true);
+                        item2.setTextAlignment(TextAlignment.CENTER);
                         break;
                 }
             }
-            pane.add(item1,0,i);
-            pane.add(item2,1,i);
-            pane.add(item3,2,i);
+            pane.add((item1 != null) ? item1 : new Separator(),0,i);
+            pane.add((item2 != null) ? item2 : new Separator(),1,i);
+            pane.add((item3 != null) ? item3 : new Separator(),2,i);
         }
+        contentsPane.setContent(pane);
     }
 }
