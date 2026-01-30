@@ -23,4 +23,6 @@ public class LineItem implements LineItemType {
     public void setContents(String newContents) {
         contents = newContents;
     }
+
+
 }

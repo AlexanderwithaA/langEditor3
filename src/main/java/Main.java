@@ -4,6 +4,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -164,6 +165,7 @@ public class Main extends Application {
                         item1 = new Label(((LangLineItem) item).getKey());
                         item1.setWrapText(true);
                         item1.setTextAlignment(TextAlignment.CENTER);
+                        item1.setAlignment(Pos.CENTER);
                         item2 = new Label(((LangLineItem) item).getOldValue());
                         item2.setWrapText(true);
                         item2.setTextAlignment(TextAlignment.CENTER);
@@ -186,7 +188,7 @@ public class Main extends Application {
                         break;
                 }
             }
-            pane.add((item1 != null) ? item1 : new Separator(),0,i);
+            pane.add((item1 != null) ? (item1.setWrapText(true); item1) : new Separator(),0,i);
             pane.add((item2 != null) ? item2 : new Separator(),1,i);
             pane.add((item3 != null) ? item3 : new Separator(),2,i);
         }
