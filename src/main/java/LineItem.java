@@ -1,3 +1,6 @@
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
 public class LineItem implements LineItemType {
 
     private final lineItemTypeEnums type = lineItemTypeEnums.LINE_ITEM;
@@ -24,5 +27,14 @@ public class LineItem implements LineItemType {
         contents = newContents;
     }
 
+    public Label formatted_GetOldContents() {
+        return new Label(oldContents);
+    }
+
+    public TextField formatted_GetContents() {
+        TextField temp = new TextField();
+        temp.setPromptText(contents);
+        return temp;
+    }
 
 }

@@ -188,7 +188,7 @@ public class Main extends Application {
                         break;
                 }
             }
-            pane.add((item1 != null) ? (item1.setWrapText(true); item1) : new Separator(),0,i);
+            pane.add((item1 != null) ? item1 : new Separator(),0,i);
             pane.add((item2 != null) ? item2 : new Separator(),1,i);
             pane.add((item3 != null) ? item3 : new Separator(),2,i);
         }

@@ -1,3 +1,5 @@
+import javafx.scene.control.Label;
+
 public class UnknownLineItem implements LineItemType{
 
     private final lineItemTypeEnums type = lineItemTypeEnums.UNKNOWN_LINE_ITEM;
@@ -13,5 +15,9 @@ public class UnknownLineItem implements LineItemType{
 
     public String getContents() {
         return contents;
+    }
+
+    public Label formatted_GetContents() {
+        return new Label(contents);
     }
 }

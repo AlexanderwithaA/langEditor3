@@ -1,3 +1,6 @@
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
 public class LangLineItem implements LineItemType {
 
     private final lineItemTypeEnums type = lineItemTypeEnums.LANG_LINE_ITEM;
@@ -28,5 +31,19 @@ public class LangLineItem implements LineItemType {
 
     public void setNewValue(String newValue) {
         this.newValue = newValue;
+    }
+
+    public Label formatted_GetKey() {
+        return new Label(key);
+    }
+
+    public Label formatted_GetOldValue() {
+        return new Label(oldValue);
+    }
+
+    public TextField formatted_GetNewValue() {
+        TextField temp = new TextField();
+        temp.setPromptText(newValue);
+        return temp;
     }
 }

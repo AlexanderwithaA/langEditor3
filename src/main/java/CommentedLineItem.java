@@ -1,3 +1,6 @@
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
 public class CommentedLineItem implements LineItemType{
 
     private final lineItemTypeEnums type = lineItemTypeEnums.COMMENTED_LINE_ITEM;
@@ -16,5 +19,9 @@ public class CommentedLineItem implements LineItemType{
 
     public String getContents() {
         return contents;
+    }
+
+    public Label formatted_GetContents() {
+        return new Label(contents);
     }
 }
