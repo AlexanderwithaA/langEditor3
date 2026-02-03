@@ -16,8 +16,4 @@ public class UnknownLineItem implements LineItemType{
     public String getContents() {
         return contents;
     }
-
-    public Label formatted_GetContents() {
-        return new Label(contents);
-    }
 }

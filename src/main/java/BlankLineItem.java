@@ -1,8 +1,6 @@
-import javafx.scene.control.Separator;
+import javafx.scene.layout.HBox;
 
-import javax.swing.*;
-
-public class BlankLineItem implements LineItemType{
+public class BlankLineItem implements LineItemType, LineItemContainerReturn {
 
     private final lineItemTypeEnums type = lineItemTypeEnums.BLANK_LINE_ITEM;
 
@@ -10,7 +8,7 @@ public class BlankLineItem implements LineItemType{
         return lineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
-    public Separator formatted_Get() {
-        return new Separator();
+    public HBox getContainer() {
+        return new HBox();
     }
 }

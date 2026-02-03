@@ -1,5 +1,5 @@
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 public class CommentedLineItem implements LineItemType{
 
@@ -21,7 +21,12 @@ public class CommentedLineItem implements LineItemType{
         return contents;
     }
 
-    public Label formatted_GetContents() {
-        return new Label(contents);
+    public HBox getContainer() {
+        HBox box = new HBox();
+
+        Label item1 = new Label(contents);
+
+        box.getChildren().add(item1);
+        return box;
     }
 }

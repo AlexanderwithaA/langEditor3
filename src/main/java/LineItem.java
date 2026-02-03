@@ -1,7 +1,10 @@
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
-public class LineItem implements LineItemType {
+public class LineItem implements LineItemType, LineItemContainerReturn {
 
     private final lineItemTypeEnums type = lineItemTypeEnums.LINE_ITEM;
     private final String oldContents;
@@ -27,14 +30,22 @@ public class LineItem implements LineItemType {
         contents = newContents;
     }
 
-    public Label formatted_GetOldContents() {
-        return new Label(oldContents);
-    }
+    public HBox getContainer() {
+        HBox box = new HBox();
+        HBox.setMargin(box, new Insets(0,10,0,10));
+        box.setAlignment(Pos.CENTER);
 
-    public TextField formatted_GetContents() {
-        TextField temp = new TextField();
-        temp.setPromptText(contents);
-        return temp;
-    }
+        Label item1 = new Label(oldContents);
+        item1.setMaxWidth(200);
+        item1.setMinWidth(200);
+        item1.setWrapText(true);
 
+        TextField item2 = new TextField();
+        item2.setMaxWidth(200);
+        item2.setMinWidth(200);
+        item2.setPromptText(contents);
+
+        box.getChildren().addAll(item1, item2);
+        return box;
+    }
 }
