@@ -134,6 +134,7 @@ public class Main extends Application {
 
     private void createLineItemBoxes(FileContainer container) {
         VBox vbox = new VBox();
+        VBox.setVgrow(vbox, Priority.ALWAYS);
         vbox.setSpacing(5);
 
         for(int i = 0; i < container.getFileLength(); i++) {

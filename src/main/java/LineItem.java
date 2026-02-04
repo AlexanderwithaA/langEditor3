@@ -32,8 +32,8 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
 
     public HBox getContainer() {
         HBox box = new HBox();
-        HBox.setMargin(box, new Insets(0,10,0,10));
         box.setAlignment(Pos.CENTER);
+        box.setSpacing(5);
 
         Label item1 = new Label(oldContents);
         item1.setMaxWidth(200);
@@ -43,7 +43,6 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
         TextField item2 = new TextField();
         item2.setMaxWidth(200);
         item2.setMinWidth(200);
-        item2.setPromptText(contents);
 
         box.getChildren().addAll(item1, item2);
         return box;
