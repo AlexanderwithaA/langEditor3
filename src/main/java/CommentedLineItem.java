@@ -1,7 +1,7 @@
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-public class CommentedLineItem implements LineItemType{
+public class CommentedLineItem implements LineItemType, LineItemContainerReturn {
 
     private final lineItemTypeEnums type = lineItemTypeEnums.COMMENTED_LINE_ITEM;
     private final String contents;
@@ -25,6 +25,8 @@ public class CommentedLineItem implements LineItemType{
         HBox box = new HBox();
 
         Label item1 = new Label(contents);
+        item1.setPrefWidth(1000);
+        item1.setWrapText(true);
 
         box.getChildren().add(item1);
         return box;

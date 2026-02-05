@@ -1,4 +1,3 @@
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -36,15 +35,17 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
         box.setSpacing(5);
 
         Label item1 = new Label(oldContents);
-        item1.setMaxWidth(200);
-        item1.setMinWidth(200);
+        item1.setPrefWidth(400);
         item1.setWrapText(true);
 
         TextField item2 = new TextField();
-        item2.setMaxWidth(200);
-        item2.setMinWidth(200);
+        item2.setPrefWidth(600);
+        item2.setText(contents);
+        item2.textProperty().addListener((observable, oldValue, newValue) -> {
+            setContents(newValue);
+        });
 
-        box.getChildren().addAll(item1, item2);
+        box.getChildren().addAll(item2, item1);
         return box;
     }
 }

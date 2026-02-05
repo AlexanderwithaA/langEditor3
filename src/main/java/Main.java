@@ -122,23 +122,20 @@ public class Main extends Application {
         Button newButton = new Button(name);
         newButton.setId(input);
         newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            openFileContents(newButton.getId());
+            populateScreen(newButton.getId());
         });
 
         buttons.add(newButton);
     }
 
-    private void openFileContents(String id) {
-        createLineItemBoxes(fileCollection.getFile(id));
-    }
-
-    private void createLineItemBoxes(FileContainer container) {
+    private void populateScreen(String id) {
         VBox vbox = new VBox();
         VBox.setVgrow(vbox, Priority.ALWAYS);
         vbox.setSpacing(5);
+        //VBox.setMargin(vbox, new Insets(10));
 
-        for(int i = 0; i < container.getFileLength(); i++) {
-            Object item = container.passLineItemObject(i);
+        for(int i = 0; i < fileCollection.getFile(id).getFileLength(); i++) {
+            Object item = fileCollection.getFile(id).passLineItemObject(i);
 
             if (item instanceof LineItemType && item instanceof LineItemContainerReturn) {
                 vbox.getChildren().add(((LineItemContainerReturn) item).getContainer());
