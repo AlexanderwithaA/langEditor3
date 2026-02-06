@@ -80,5 +80,32 @@ public class FileContainer {
         return fileContents.get(index);
     }
 
+    public boolean areYouModified() {
+        for (Object item : fileContents) {
+            if (item instanceof LineItemType) {
+                switch (((LineItemType) item).getType()) {
+                    case UNKNOWN_LINE_ITEM:
+                        break;
+                    case BLANK_LINE_ITEM:
+                        break;
+                    case LINE_ITEM:
+                        if(item instanceof LineItem && !((LineItem) item).getContents().isBlank()) {
+                            return true;
+                        }
+                        break;
+                    case LANG_LINE_ITEM:
+                        if(item instanceof LangLineItem && !((LangLineItem) item).getNewValue().isBlank()) {
+                            return true;
+                        }
+                        break;
+                    case COMMENTED_LINE_ITEM:
+                        break;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
 }

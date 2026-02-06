@@ -13,4 +13,15 @@ public class FileCollection {
     public FileContainer getFile(String file) {
         return fileMap.get(file);
     }
+
+    public void packItUp(String[] manifest) {
+        HashMap<String, FileContainer> cleanFileMap = new HashMap<>();
+        for(String key : fileMap.keySet()) {
+            if (!fileMap.get(key).areYouModified()) {
+                cleanFileMap.put(key,fileMap.get(key));
+            }
+        }
+
+
+    }
 }

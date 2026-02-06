@@ -43,6 +43,7 @@ public class LangLineItem implements LineItemType, LineItemContainerReturn {
         Label item1 = new Label(key);
         item1.setPrefWidth(300);
         item1.setWrapText(true);
+        item1.setAlignment(Pos.CENTER_RIGHT);
 
         Label item2 = new Label(oldValue);
         item2.setPrefWidth(300);
@@ -51,9 +52,7 @@ public class LangLineItem implements LineItemType, LineItemContainerReturn {
         TextField item3 = new TextField();
         item3.setPrefWidth(400);
         item3.setText(newValue);
-        item3.textProperty().addListener((observable, oldValue, newValue) -> {
-            setNewValue(newValue);
-        });
+        item3.textProperty().addListener((observable, oldValue, newValue) -> setNewValue(newValue));
 
         box.getChildren().addAll(item1, item3, item2);
         return box;

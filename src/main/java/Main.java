@@ -4,6 +4,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -132,6 +133,7 @@ public class Main extends Application {
         VBox vbox = new VBox();
         VBox.setVgrow(vbox, Priority.ALWAYS);
         vbox.setSpacing(5);
+        vbox.setAlignment(Pos.CENTER);
         //VBox.setMargin(vbox, new Insets(10));
 
         for(int i = 0; i < fileCollection.getFile(id).getFileLength(); i++) {
@@ -140,7 +142,13 @@ public class Main extends Application {
             if (item instanceof LineItemType && item instanceof LineItemContainerReturn) {
                 vbox.getChildren().add(((LineItemContainerReturn) item).getContainer());
             }
+
+            if (i % 2 == 0) {
+                vbox.getChildren().getLast().setStyle("-fx-background-color: rgb(235, 235, 235);");
+            }
         }
+
+        contentsPane.setFitToWidth(true);
         contentsPane.setContent(vbox);
     }
 }
