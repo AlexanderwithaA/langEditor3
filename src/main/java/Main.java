@@ -53,7 +53,8 @@ public class Main extends Application {
         selectedJar.textProperty().bind(labelText);
 
         Button selectJar = new Button("Select the BTA Jar");
-        VBox jarSelectionBox = new VBox(selectedJar, selectJar);
+        Button tempExport = new Button("export (this is temporary)");
+        VBox jarSelectionBox = new VBox(selectedJar, selectJar, tempExport);
 
         VBox.setMargin(jarSelectionBox, new Insets(10));
         jarSelectionBox.setSpacing(4);
@@ -78,6 +79,15 @@ public class Main extends Application {
         selectJar.setOnAction(e -> {
             try {
                 scanJar();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        tempExport.setOnAction(e -> {
+            String[] temp = {"a","b","c"};
+            try {
+                fileCollection.packItUp(temp);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

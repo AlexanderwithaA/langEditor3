@@ -107,5 +107,34 @@ public class FileContainer {
         return false;
     }
 
+    public List<String> returnDiffClone() {
+        List<String> diffContents = new ArrayList<>();
+
+        for (Object item : fileContents) {
+            if (item instanceof LineItemType) {
+                switch (((LineItemType) item).getType()) {
+                    case UNKNOWN_LINE_ITEM:
+                        break;
+                    case BLANK_LINE_ITEM:
+                        break;
+                    case LINE_ITEM:
+                        if(item instanceof LineItem && ((LineItem) item).getContents() != null && !((LineItem) item).getContents().isBlank()) {
+                            diffContents.add(((LineItem) item).getContents());
+                        }
+                        break;
+                    case LANG_LINE_ITEM:
+                        if((item instanceof LangLineItem) && (((LangLineItem) item).getNewValue() != null) && !(((LangLineItem) item).getNewValue().isBlank())) {
+                            diffContents.add(((LangLineItem) item).getKey() + "=" + ((LangLineItem) item).getNewValue());
+                        }
+                        break;
+                    case COMMENTED_LINE_ITEM:
+                        break;
+                }
+            }
+        }
+
+        return diffContents;
+    }
+
 
 }
