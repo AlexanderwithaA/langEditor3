@@ -20,7 +20,7 @@ public class FileCollection {
     public void packItUp(String[] manifest) throws IOException {
         HashMap<String, List<String>> cleanFileMap = new HashMap<>();
         for(String key : fileMap.keySet()) {
-            if (!fileMap.get(key).areYouModified()) {
+            if (fileMap.get(key).areYouModified()) {
                 cleanFileMap.put(key,fileMap.get(key).returnDiffClone());
             }
         }

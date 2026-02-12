@@ -53,8 +53,9 @@ public class Main extends Application {
         selectedJar.textProperty().bind(labelText);
 
         Button selectJar = new Button("Select the BTA Jar");
-        Button tempExport = new Button("export (this is temporary)");
-        VBox jarSelectionBox = new VBox(selectedJar, selectJar, tempExport);
+        Button export = new Button("Export Language Pack");
+        export.setDisable(true);
+        VBox jarSelectionBox = new VBox(selectedJar, selectJar, export);
 
         VBox.setMargin(jarSelectionBox, new Insets(10));
         jarSelectionBox.setSpacing(4);
@@ -74,17 +75,43 @@ public class Main extends Application {
         this.primaryStage.setScene(mainPanel);
         this.primaryStage.show();
 
+        Dialog<String[]> exportDialog = new Dialog<>();
+        exportDialog.setTitle("Configure Manifest");
+
+        TextField title = new TextField();
+        TextField identifier = new TextField();
+        TextField regionCode = new TextField();
+        TextField credits = new TextField();
+
+        regionCode.setPromptText("en_US, ru_RU, zn_CH...");
+        identifier.setPromptText("my_language_pack");
+        credits.setPromptText("Comma separated list");
+
+        GridPane dialogPane = new GridPane();
+        dialogPane.add(new Label("Title"), 0,0);
+        dialogPane.add(new Label("ID"), 1,0);
+        dialogPane.add(new Label("Region"), 2,0);
+        dialogPane.add(new Label("Credits"), 3,0);
+
+        dialogPane.add(title, 0,1);
+        dialogPane.add(identifier,1,1);
+        dialogPane.add(regionCode,2,1);
+        dialogPane.add(credits,3,1);
+
+        exportDialog.getDialogPane().getChildren().add(dialogPane);
+
         //button handler
 
         selectJar.setOnAction(e -> {
             try {
                 scanJar();
+                export.setDisable(false);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
 
-        tempExport.setOnAction(e -> {
+        export.setOnAction(e -> {
             String[] temp = {"a","b","c"};
             try {
                 fileCollection.packItUp(temp);

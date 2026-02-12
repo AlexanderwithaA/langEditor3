@@ -27,7 +27,7 @@ public class FileContainer {
         while(input.ready()) {
             String line = input.readLine();
 
-            System.out.println(line);
+            //System.out.println(line);
 
             if(line.isBlank()) {
                 fileContents.add(new BlankLineItem());
@@ -89,12 +89,12 @@ public class FileContainer {
                     case BLANK_LINE_ITEM:
                         break;
                     case LINE_ITEM:
-                        if(item instanceof LineItem && !((LineItem) item).getContents().isBlank()) {
+                        if(item instanceof LineItem && ((LineItem) item).getContents() != null && !((LineItem) item).getContents().isBlank()) {
                             return true;
                         }
                         break;
                     case LANG_LINE_ITEM:
-                        if(item instanceof LangLineItem && !((LangLineItem) item).getNewValue().isBlank()) {
+                        if(item instanceof LangLineItem && ((LangLineItem) item).getNewValue() != null && !((LangLineItem) item).getNewValue().isBlank()) {
                             return true;
                         }
                         break;
@@ -123,7 +123,7 @@ public class FileContainer {
                         }
                         break;
                     case LANG_LINE_ITEM:
-                        if((item instanceof LangLineItem) && (((LangLineItem) item).getNewValue() != null) && !(((LangLineItem) item).getNewValue().isBlank())) {
+                        if(item instanceof LangLineItem && ((LangLineItem) item).getNewValue() != null && !((LangLineItem) item).getNewValue().isBlank()) {
                             diffContents.add(((LangLineItem) item).getKey() + "=" + ((LangLineItem) item).getNewValue());
                         }
                         break;
