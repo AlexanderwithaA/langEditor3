@@ -78,6 +78,7 @@ public class Main extends Application {
         Dialog<String[]> exportDialog = new Dialog<>();
         exportDialog.setTitle("Configure Manifest");
 
+        ButtonType confirm = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
         TextField title = new TextField();
         TextField identifier = new TextField();
         TextField regionCode = new TextField();
@@ -86,19 +87,20 @@ public class Main extends Application {
         regionCode.setPromptText("en_US, ru_RU, zn_CH...");
         identifier.setPromptText("my_language_pack");
         credits.setPromptText("Comma separated list");
+        boolean confirmDisable = false;
 
         GridPane dialogPane = new GridPane();
         dialogPane.add(new Label("Title"), 0,0);
-        dialogPane.add(new Label("ID"), 1,0);
-        dialogPane.add(new Label("Region"), 2,0);
-        dialogPane.add(new Label("Credits"), 3,0);
-
-        dialogPane.add(title, 0,1);
+        dialogPane.add(new Label("ID"), 0,1);
+        dialogPane.add(new Label("Region"), 0,2);
+        dialogPane.add(new Label("Credits"), 0,3);
+        dialogPane.add(title, 1,0);
         dialogPane.add(identifier,1,1);
-        dialogPane.add(regionCode,2,1);
-        dialogPane.add(credits,3,1);
+        dialogPane.add(regionCode,1,2);
+        dialogPane.add(credits,1,3);
 
         exportDialog.getDialogPane().getChildren().add(dialogPane);
+        exportDialog.getDialogPane().lookupButton(confirm).setDisable(confirmDisable);
 
         //button handler
 
@@ -113,6 +115,7 @@ public class Main extends Application {
 
         export.setOnAction(e -> {
             String[] temp = {"a","b","c"};
+            exportDialog.showAndWait();
             try {
                 fileCollection.packItUp(temp);
             } catch (IOException ex) {
