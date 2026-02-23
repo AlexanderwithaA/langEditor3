@@ -21,7 +21,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class Main extends Application {
+public class main extends Application {
 
     private final FileCollection fileCollection = new FileCollection();
     private final String[] implementationVersions = {"7.3_04"};
