@@ -7,15 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class jarSelectionBuilder {
+// The jar selector part of the window is complicated enough that it warrants its own class to manage
+public class JarSelectionBuilder {
     private boolean exporting;
     private final StringProperty labelText = new SimpleStringProperty();
     private final VBox jarSelectionBox;
     private final Button export;
+    private final Button selectJar;
 
-    public jarSelectionBuilder() {
+    public JarSelectionBuilder() {
         Label selectedJar = new Label();
-        Button selectJar = new Button("Select the BTA Jar");
+        selectJar = new Button("Select the BTA Jar");
         export = new Button("Export Language Pack");
 
         // set styling/properties for the above
@@ -44,5 +46,9 @@ public class jarSelectionBuilder {
     public void setExportAllowance(Boolean state) {
         exporting = state;
         export.setDisable(!exporting);
+    }
+
+    public Button getJarSelectButton() {
+        return selectJar;
     }
 }
