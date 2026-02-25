@@ -51,4 +51,8 @@ public class JarSelectionBuilder {
     public Button getJarSelectButton() {
         return selectJar;
     }
+
+    public Button getJarExportButton() {
+        return export;
+    }
 }

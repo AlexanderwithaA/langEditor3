@@ -3,6 +3,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import windowComponents.JarSelectionBuilder;
@@ -44,18 +45,8 @@ public class WindowBuilder {
     }
 
     // jarSelectionBuilder passthrough
-    public Button getJarSelectButton() {
-        return builder.getJarSelectButton();
-    }
-
-    // jarSelectionBuilder passthrough
-    public void exportAllowancePassthrough(boolean state) {
-        builder.setExportAllowance(state);
-    }
-
-    // jarSelectionBuilder passthrough
-    public void ImportButtonTextPassthrough(String text) {
-        builder.setImportButtonText(text);
+    public JarSelectionBuilder getJarSelectionBuilder() {
+        return builder;
     }
 
     // create buttons for selecting jar files
@@ -89,5 +80,35 @@ public class WindowBuilder {
 
         contentsPane.setFitToWidth(true);
         contentsPane.setContent(vbox);
+    }
+
+    public void exportWindow() {
+        Dialog<String[]> exportDialog = new Dialog<>();
+        exportDialog.setTitle("Configure Manifest");
+
+        ButtonType confirm = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
+        TextField title = new TextField();
+        TextField identifier = new TextField();
+        TextField regionCode = new TextField();
+        TextField credits = new TextField();
+
+        regionCode.setPromptText("en_US, ru_RU, zn_CH...");
+        identifier.setPromptText("my_language_pack");
+        credits.setPromptText("Comma separated list");
+        boolean confirmDisable = false;
+
+        GridPane dialogPane = new GridPane();
+        dialogPane.add(new Label("Title"), 0,0);
+        dialogPane.add(new Label("ID"), 0,1);
+        dialogPane.add(new Label("Region"), 0,2);
+        dialogPane.add(new Label("Credits"), 0,3);
+        dialogPane.add(title, 1,0);
+        dialogPane.add(identifier,1,1);
+        dialogPane.add(regionCode,1,2);
+        dialogPane.add(credits,1,3);
+
+        exportDialog.getDialogPane().getChildren().add(dialogPane);
+        exportDialog.getDialogPane().lookupButton(confirm).setDisable(confirmDisable);
+        exportDialog.showAndWait();
     }
 }

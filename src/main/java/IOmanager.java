@@ -43,7 +43,7 @@ public class IOmanager {
         }
 
         if (validJar) {
-            windowBuilder.ImportButtonTextPassthrough("Jar: " + file.getName());
+            windowBuilder.getJarSelectionBuilder().setImportButtonText("Jar: " + file.getName());
 
             for (Enumeration<JarEntry> enumStructure = jarScanner.entries(); enumStructure.hasMoreElements(); ) {
                 JarEntry entry = enumStructure.nextElement();
