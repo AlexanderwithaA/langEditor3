@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import windowComponents.ExportDialog;
 import windowComponents.JarSelectionBuilder;
 
+import java.util.Optional;
+
 // This class's purpose is to separate all the logic of this program from the UI. Mainly to clean up the main class
 public class WindowBuilder {
     private final ObservableList<Button> fileSelectionPane = FXCollections.observableArrayList();
@@ -83,7 +85,7 @@ public class WindowBuilder {
         contentsPane.setContent(vbox);
     }
 
-    public void exportWindow() {
+    public Optional<String[]> exportWindow() {
 //        Dialog<String[]> exportDialog = new Dialog<>();
 //        exportDialog.setTitle("Configure Manifest");
 //
@@ -113,6 +115,6 @@ public class WindowBuilder {
 //        exportDialog.showAndWait();
 
         ExportDialog dialog = new ExportDialog();
-        dialog.showAndWait();
+        return dialog.showAndWait();
     }
 }

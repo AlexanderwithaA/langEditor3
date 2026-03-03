@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,6 +19,16 @@ public class FileCollection {
         return fileMap.get(file);
     }
 
+//    {
+//        "id": "en_US",
+//        "name": "English",
+//        "region": "US",
+//        "credits": [
+//            "insert your name here"
+//        ]
+//    }
+
+    //manifest should contain: title, ID, region, credits
     public void packItUp(String[] manifest) throws IOException {
         HashMap<String, List<String>> cleanFileMap = new HashMap<>();
         for(String key : fileMap.keySet()) {
@@ -25,9 +37,27 @@ public class FileCollection {
             }
         }
 
-        FileOutputStream fileOS = new FileOutputStream("temp.zip");
+        // create the manifest, using a class as the template
+        Gson gson = new Gson();
+        String json = gson.toJson(new manifestTemplate(manifest[1],manifest[0],manifest[2],manifest[3]));
+
+        FileOutputStream fileOS = new FileOutputStream(manifest[1] + ".zip");
         ZipOutputStream zipOS = new ZipOutputStream(fileOS);
 
+        // surely I should be using a different type of input stream???
+        // stream in the manifest
+        InputStream inputStream = new ByteArrayInputStream(json.getBytes());
+        ZipEntry zipEntry = new ZipEntry("lang_info.json");
+        zipOS.putNextEntry(zipEntry);
+
+        byte[] bytes = new byte[1024];
+        int data;
+        while ((data = inputStream.read(bytes)) >= 0) {
+            zipOS.write(bytes, 0, data);
+        }
+        inputStream.close();
+
+        // stream in the file data
         for(String path : cleanFileMap.keySet()) {
             //convert list to byte stream
             StringBuilder stringBuilder = new StringBuilder();
@@ -39,12 +69,10 @@ public class FileCollection {
 
             //pack byte stream into zip
 
-            InputStream inputStream = new ByteArrayInputStream(stringBytes);
-            ZipEntry zipEntry = new ZipEntry(path);
+            inputStream = new ByteArrayInputStream(stringBytes);
+            zipEntry = new ZipEntry(path);
             zipOS.putNextEntry(zipEntry);
 
-            byte[] bytes = new byte[1024];
-            int data;
             while ((data = inputStream.read(bytes)) >= 0) {
                 zipOS.write(bytes, 0, data);
             }
