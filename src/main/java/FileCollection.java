@@ -19,15 +19,6 @@ public class FileCollection {
         return fileMap.get(file);
     }
 
-//    {
-//        "id": "en_US",
-//        "name": "English",
-//        "region": "US",
-//        "credits": [
-//            "insert your name here"
-//        ]
-//    }
-
     //manifest should contain: title, ID, region, credits
     public void packItUp(String[] manifest) throws IOException {
         HashMap<String, List<String>> cleanFileMap = new HashMap<>();
@@ -44,7 +35,7 @@ public class FileCollection {
         FileOutputStream fileOS = new FileOutputStream(manifest[1] + ".zip");
         ZipOutputStream zipOS = new ZipOutputStream(fileOS);
 
-        // surely I should be using a different type of input stream???
+        // surely I should be using a different type of input stream??? StringReader()??
         // stream in the manifest
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         ZipEntry zipEntry = new ZipEntry("lang_info.json");
