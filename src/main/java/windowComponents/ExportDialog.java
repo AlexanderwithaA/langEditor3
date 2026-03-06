@@ -1,22 +1,29 @@
 package windowComponents;
 
-import com.sun.javafx.font.FallbackResource;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class ExportDialog extends Dialog<String[]> {
     private final ButtonType saveButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
     private final ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
     private boolean[] checkArray = {false,false,false,false}; // this method sucks and I haven't even completed it yet
+    private String exportLocation;
+    private final StringProperty labelText = new SimpleStringProperty();
 
     public ExportDialog() {
         setTitle("Configure Manifest");
 
         // dialog contents
         StackPane contentPane = new StackPane();
+        VBox vbox = new VBox();
 
         contentPane.setPrefSize(300, 200);
 
@@ -43,7 +50,13 @@ public class ExportDialog extends Dialog<String[]> {
         gridpane.setVgap(5);
         gridpane.setHgap(5);
 
-        contentPane.getChildren().addAll(gridpane);
+        Button locationPicker = new Button();
+        locationPicker.textProperty().bind(labelText);
+        labelText.set("No export location Selected...");
+
+        vbox.getChildren().addAll(gridpane,locationPicker);
+
+        contentPane.getChildren().addAll(vbox);
         getDialogPane().setContent(contentPane);
 
         // Add buttons to the dialog
@@ -66,6 +79,24 @@ public class ExportDialog extends Dialog<String[]> {
             checkArray[3] = credits.getCharacters().isEmpty();
         });
 
+        locationPicker.setOnAction(e -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            exportLocation = directoryChooser.showDialog(null).getPath(); // I mean, in the docs it says, "If the owner window for the
+            // directory selection dialog is set, input to all windows in the dialog's owner chain is blocked while the dialog
+            // is being shown." which implies the windows can be unset. But this does not feel right
+
+            exportLocation = exportLocation.replace("\\","/");
+            if (! new File(exportLocation).exists()) {
+                labelText.set("Invalid Location: " + exportLocation);
+            } else {
+                labelText.set("Export Location: " + exportLocation);
+            }
+
+            if(!exportLocation.endsWith("/")) {
+                exportLocation = exportLocation + "/";
+            }
+        });
+
         // Set the result converter
         setResultConverter(buttonType -> {
 
@@ -73,10 +104,11 @@ public class ExportDialog extends Dialog<String[]> {
 
                 if(Arrays.equals(checkArray, new boolean[]{true, true, true, true})) {
                     // pack inputs into array on save, zip gets made after this
-                    return new String[]{title.getCharacters().toString(),identifier.getCharacters().toString(),regionCode.getCharacters().toString(),credits.getCharacters().toString()};
+                    return new String[]{title.getCharacters().toString(),identifier.getCharacters().toString(),regionCode.getCharacters().toString(),credits.getCharacters().toString(), exportLocation};
                 } else {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All fields must be filled!");
                     alert.showAndWait();
+                    System.out.println(Arrays.toString(checkArray));
                 }
             }
             // just do nothing ig

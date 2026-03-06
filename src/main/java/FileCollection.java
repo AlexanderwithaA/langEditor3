@@ -32,7 +32,7 @@ public class FileCollection {
         Gson gson = new Gson();
         String json = gson.toJson(new manifestTemplate(manifest[1],manifest[0],manifest[2],manifest[3]));
 
-        FileOutputStream fileOS = new FileOutputStream(manifest[1] + ".zip");
+        FileOutputStream fileOS = new FileOutputStream(manifest[4] + manifest[1] + ".zip");
         ZipOutputStream zipOS = new ZipOutputStream(fileOS);
 
         // surely I should be using a different type of input stream??? StringReader()??
