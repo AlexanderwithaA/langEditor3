@@ -1,3 +1,4 @@
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -42,7 +43,7 @@ public class IOmanager {
             }
         }
 
-        if (validJar) {
+        if (validJar) { // Need to only allow jars. Currently non-jars can be selected as well
             windowBuilder.getJarSelectionBuilder().setImportButtonText("Jar: " + file.getName());
 
             for (Enumeration<JarEntry> enumStructure = jarScanner.entries(); enumStructure.hasMoreElements(); ) {
@@ -51,14 +52,13 @@ public class IOmanager {
                     BufferedReader inputReader = new BufferedReader(new InputStreamReader(jarScanner.getInputStream(entry)));
                     fileCollection.addFile(entry.getName(), inputReader);
                     Button newButton = windowBuilder.newFileSelectButton(entry.getName());
-                    newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                        windowBuilder.loadFileContents(newButton.getId());
-                    });
+                    newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> windowBuilder.loadFileContents(newButton.getId()));
                 }
             }
             jarScanner.close();
         } else {
-            //invalid jar warning here.
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Invalid jar, ensure the selected jar is BTA"); //alternate text of: "Last I checked that ain't BTA"
+            alert.showAndWait();
         }
     }
 }

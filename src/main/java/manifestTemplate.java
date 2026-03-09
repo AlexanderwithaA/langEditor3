@@ -1,8 +1,8 @@
 public class manifestTemplate {
-    private String id;
-    private String name;
-    private String region;
-    private String[] credits;
+    private final String id;
+    private final String name;
+    private final String region;
+    private final String[] credits;
 
     public manifestTemplate(String id, String name, String region, String credits) {
         this.id = id;

@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class ExportDialog extends Dialog<String[]> {
     private final ButtonType saveButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
     private final ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-    private boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
+    private final boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
     private String exportLocation;
     private final StringProperty labelText = new SimpleStringProperty();
 

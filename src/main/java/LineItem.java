@@ -41,9 +41,7 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
         TextField item2 = new TextField();
         item2.setPrefWidth(600);
         item2.setText(contents);
-        item2.textProperty().addListener((observable, oldValue, newValue) -> {
-            setContents(newValue);
-        });
+        item2.textProperty().addListener((e, oldValue, newValue) -> setContents(newValue));
 
         box.getChildren().addAll(item2, item1);
         return box;

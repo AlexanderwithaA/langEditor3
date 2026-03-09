@@ -1,4 +1,3 @@
-import javafx.scene.control.Label;
 
 public class UnknownLineItem implements LineItemType{
 
