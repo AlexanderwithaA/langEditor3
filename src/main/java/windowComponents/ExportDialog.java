@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class ExportDialog extends Dialog<String[]> {
     private final ButtonType saveButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
     private final ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-    private boolean[] checkArray = {false,false,false,false}; // this method sucks and I haven't even completed it yet
+    private boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
     private String exportLocation;
     private final StringProperty labelText = new SimpleStringProperty();
 
@@ -63,21 +63,13 @@ public class ExportDialog extends Dialog<String[]> {
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
 
-        title.setOnAction(e -> {
-             checkArray[0] = title.getCharacters().isEmpty();
-        });
+        title.textProperty().addListener((e) -> checkArray[0] = !title.getCharacters().isEmpty());
 
-        identifier.setOnAction(e -> {
-            checkArray[1] = identifier.getCharacters().isEmpty();
-        });
+        identifier.textProperty().addListener((e) -> checkArray[1] = !identifier.getCharacters().isEmpty());
 
-        regionCode.setOnAction(e -> {
-            checkArray[2] = regionCode.getCharacters().isEmpty();
-        });
+        regionCode.textProperty().addListener((e) -> checkArray[2] = !regionCode.getCharacters().isEmpty());
 
-        credits.setOnAction(e -> {
-            checkArray[3] = credits.getCharacters().isEmpty();
-        });
+        credits.textProperty().addListener((e) -> checkArray[3] = !credits.getCharacters().isEmpty());
 
         locationPicker.setOnAction(e -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -86,10 +78,12 @@ public class ExportDialog extends Dialog<String[]> {
             // is being shown." which implies the windows can be unset. But this does not feel right
 
             exportLocation = exportLocation.replace("\\","/");
-            if (! new File(exportLocation).exists()) {
+            if (!new File(exportLocation).exists()) {
                 labelText.set("Invalid Location: " + exportLocation);
+                checkArray[4] = false;
             } else {
                 labelText.set("Export Location: " + exportLocation);
+                checkArray[4] = true;
             }
 
             if(!exportLocation.endsWith("/")) {
@@ -102,7 +96,7 @@ public class ExportDialog extends Dialog<String[]> {
 
             if (buttonType == saveButtonType) {
 
-                if(Arrays.equals(checkArray, new boolean[]{true, true, true, true})) {
+                if(Arrays.equals(checkArray, new boolean[]{true, true, true, true, true})) {
                     // pack inputs into array on save, zip gets made after this
                     return new String[]{title.getCharacters().toString(),identifier.getCharacters().toString(),regionCode.getCharacters().toString(),credits.getCharacters().toString(), exportLocation};
                 } else {
