@@ -2,10 +2,10 @@ import javafx.scene.layout.HBox;
 
 public class BlankLineItem implements LineItemType, LineItemContainerReturn {
 
-    private final lineItemTypeEnums type = lineItemTypeEnums.BLANK_LINE_ITEM;
+    private final LineItemTypeEnums type = LineItemTypeEnums.BLANK_LINE_ITEM;
 
-    public lineItemTypeEnums getType() {
-        return lineItemTypeEnums.valueOf(String.valueOf(type));
+    public LineItemTypeEnums getType() {
+        return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public HBox getContainer() {

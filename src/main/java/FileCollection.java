@@ -30,7 +30,7 @@ public class FileCollection {
 
         // create the manifest, using a class as the template
         Gson gson = new Gson();
-        String json = gson.toJson(new manifestTemplate(manifest[1],manifest[0],manifest[2],manifest[3]));
+        String json = gson.toJson(new ManifestTemplate(manifest[1],manifest[0],manifest[2],manifest[3]));
 
         FileOutputStream fileOS = new FileOutputStream(manifest[4] + manifest[1] + ".zip");
         ZipOutputStream zipOS = new ZipOutputStream(fileOS);

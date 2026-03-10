@@ -1,15 +1,15 @@
 
 public class UnknownLineItem implements LineItemType{
 
-    private final lineItemTypeEnums type = lineItemTypeEnums.UNKNOWN_LINE_ITEM;
+    private final LineItemTypeEnums type = LineItemTypeEnums.UNKNOWN_LINE_ITEM;
     private final String contents;
 
     public UnknownLineItem(String contents) {
         this.contents = contents;
     }
 
-    public lineItemTypeEnums getType() {
-        return lineItemTypeEnums.valueOf(String.valueOf(type));
+    public LineItemTypeEnums getType() {
+        return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getContents() {

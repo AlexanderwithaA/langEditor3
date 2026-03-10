@@ -1,4 +1,4 @@
 public interface LineItemType {
-    lineItemTypeEnums getType();
+    LineItemTypeEnums getType();
 }
 

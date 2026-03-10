@@ -5,7 +5,7 @@ import javafx.scene.layout.HBox;
 
 public class LineItem implements LineItemType, LineItemContainerReturn {
 
-    private final lineItemTypeEnums type = lineItemTypeEnums.LINE_ITEM;
+    private final LineItemTypeEnums type = LineItemTypeEnums.LINE_ITEM;
     private final String oldContents;
     private String contents;
 
@@ -13,8 +13,8 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
         this.oldContents = oldContents;
     }
 
-    public lineItemTypeEnums getType() {
-        return lineItemTypeEnums.valueOf(String.valueOf(type));
+    public LineItemTypeEnums getType() {
+        return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getOldContents() {

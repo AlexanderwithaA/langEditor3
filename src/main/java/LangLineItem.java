@@ -5,7 +5,7 @@ import javafx.scene.layout.HBox;
 
 public class LangLineItem implements LineItemType, LineItemContainerReturn {
 
-    private final lineItemTypeEnums type = lineItemTypeEnums.LANG_LINE_ITEM;
+    private final LineItemTypeEnums type = LineItemTypeEnums.LANG_LINE_ITEM;
     private final String key;
     private final String oldValue;
     private String newValue;
@@ -15,8 +15,8 @@ public class LangLineItem implements LineItemType, LineItemContainerReturn {
         this.oldValue = oldValue;
     }
 
-    public lineItemTypeEnums getType() {
-        return lineItemTypeEnums.valueOf(String.valueOf(type));
+    public LineItemTypeEnums getType() {
+        return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getKey() {

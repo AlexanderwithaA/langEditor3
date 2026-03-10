@@ -3,7 +3,7 @@ import javafx.scene.layout.HBox;
 
 public class CommentedLineItem implements LineItemType, LineItemContainerReturn {
 
-    private final lineItemTypeEnums type = lineItemTypeEnums.COMMENTED_LINE_ITEM;
+    private final LineItemTypeEnums type = LineItemTypeEnums.COMMENTED_LINE_ITEM;
     private final String contents;
 
     public CommentedLineItem(String contents) {
@@ -13,8 +13,8 @@ public class CommentedLineItem implements LineItemType, LineItemContainerReturn 
         this.contents = contents;
     }
 
-    public lineItemTypeEnums getType() {
-        return lineItemTypeEnums.valueOf(String.valueOf(type));
+    public LineItemTypeEnums getType() {
+        return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
     public String getContents() {

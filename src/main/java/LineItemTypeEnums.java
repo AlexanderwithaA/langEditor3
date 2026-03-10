@@ -1,4 +1,4 @@
-public enum lineItemTypeEnums {
+public enum LineItemTypeEnums {
     LINE_ITEM,
     LANG_LINE_ITEM,
     COMMENTED_LINE_ITEM,

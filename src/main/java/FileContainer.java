@@ -65,7 +65,7 @@ public class FileContainer {
             }
 
             System.out.println("WOAH THERE!! Looks like the line \"" + line + "\" didn't get picked up by any of the checks and is going to be made into a "
-                    + lineItemTypeEnums.UNKNOWN_LINE_ITEM + "!");
+                    + LineItemTypeEnums.UNKNOWN_LINE_ITEM + "!");
             fileContents.add(new UnknownLineItem(line));
         }
 

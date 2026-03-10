@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 //main should contain only boilerplate and logic related code, javafx window building, and IO (ie jar scanning) should be done in other classes
-public class main extends Application {
+public class LangEditor extends Application {
 
     private Stage primaryStage;
     private final FileCollection fileCollection = new FileCollection();
