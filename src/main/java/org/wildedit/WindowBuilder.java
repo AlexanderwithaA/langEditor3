@@ -1,3 +1,5 @@
+package org.wildedit;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -5,8 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import windowComponents.ExportDialog;
-import windowComponents.JarSelectionBuilder;
+import org.wildedit.windowComponents.ExportDialog;
+import org.wildedit.windowComponents.JarSelectionBuilder;
 
 import java.util.Optional;
 

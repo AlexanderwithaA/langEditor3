@@ -1,4 +1,4 @@
-package windowComponents;
+package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

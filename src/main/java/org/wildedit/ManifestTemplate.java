@@ -1,3 +1,5 @@
+package org.wildedit;
+
 public class ManifestTemplate {
     private final String id;
     private final String name;

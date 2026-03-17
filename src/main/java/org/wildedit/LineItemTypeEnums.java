@@ -1,3 +1,5 @@
+package org.wildedit;
+
 public enum LineItemTypeEnums {
     LINE_ITEM,
     LANG_LINE_ITEM,
