@@ -8,6 +8,15 @@
     <artifactId>langEditor</artifactId>
     <version>0.1-MVP</version>
 
+    <licenses>
+        <license>
+            <name></name>
+            <url></url>
+            <distribution>repo</distribution>
+            <comments></comments>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
