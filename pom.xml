@@ -10,10 +10,10 @@
 
     <licenses>
         <license>
-            <name></name>
-            <url></url>
+            <name>AGPL-3.0-only</name>
+            <url>https://spdx.org/licenses/AGPL-3.0-only.html</url>
             <distribution>repo</distribution>
-            <comments></comments>
+            <comments>Just be nice about it if you want to use it</comments>
         </license>
     </licenses>
 
