@@ -29,7 +29,7 @@ public class Main {
 // todo, misc...
 // does it work on other platforms? (macos)
 // x any memory leaks? (what happens when I "open" and "close" files?) Seemingly no....
-// make FXwindow main branch
+// x make FXwindow main branch
 // cleanup repo
 // hotkeys to format text or a formatting bar
 // preview window (would be neat if I could hook into the provided game jar to use the native thing for this!)
