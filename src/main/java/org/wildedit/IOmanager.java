@@ -58,6 +58,8 @@ public class IOmanager {
                 JarEntry entry = enumStructure.nextElement();
                 if (entry.getName().endsWith(".lang")) { // Removed the ability to edit the splashes as that does nothing atm  || entry.getName().endsWith("splashes.txt")
                     BufferedReader inputReader = new BufferedReader(new InputStreamReader(jarScanner.getInputStream(entry)));
+                    String entryName = entry.getName();
+
                     fileCollection.addFile(entry.getName(), inputReader);
                     Button newButton = windowBuilder.newFileSelectButton(entry.getName());
                     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> windowBuilder.loadFileContents(newButton.getId()));
