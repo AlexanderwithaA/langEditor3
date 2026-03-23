@@ -30,6 +30,7 @@ public class LangEditor extends Application {
         this.primaryStage.setScene(mainPanel);
         this.primaryStage.show();
 
+        //this should open the system dialog to pick a jar file
         windowBuilder.getJarSelectionBuilder().getJarSelectButton().setOnAction(e -> {
             try {
                 iOmanager.scanJar();

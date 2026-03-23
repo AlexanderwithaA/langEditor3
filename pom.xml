@@ -71,18 +71,19 @@
                             <createZipball>true</createZipball>
                         </configuration>
                     </execution>
-<!--                    <execution>-->
-<!--                        <id>bundling-for-linux</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>package</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <platform>linux</platform>-->
-<!--                            <createTarball>true</createTarball>-->
+                    <execution>
+                        <id>bundling-for-linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.wildedit.Main</mainClass>
+                            <platform>linux</platform>
+                            <createTarball>true</createTarball>
 <!--                            <jdkPath>X:\\path\to\linux\jdk</jdkPath>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                        </configuration>
+                    </execution>
 <!--                    <execution>-->
 <!--                        <id>bundling-for-mac</id>-->
 <!--                        <phase>package</phase>-->

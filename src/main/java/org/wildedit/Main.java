@@ -11,6 +11,7 @@ public class Main {
 // -improve filtering for bta jars
 // -determine what proper action is when previously a jar was selected and a new jar is selected (prompt to save and clear?
 // prevent such action? do older jars have translation keys that may want to be used to make multi-version language packs?)
+// -fix export being allowed after selecting non-bta jar (warning occurs, yet exporting becomes enabled)
 
 // todo... improve window layout
 // it looks ass
@@ -25,9 +26,8 @@ public class Main {
 // (basically update existing language packs)
 
 // todo, misc...
-// does it work on other platforms? (linux, macos)
+// does it work on other platforms? (macos)
 // any memory leaks? (what happens when I "open" and "close" files?)
-// x license
 // make FXwindow main branch
 // cleanup repo
 // hotkeys to format text or a formatting bar
