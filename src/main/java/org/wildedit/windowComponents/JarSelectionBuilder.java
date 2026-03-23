@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 // The jar selector part of the window is complicated enough that it warrants its own class to manage
 public class JarSelectionBuilder {
     private boolean exporting;
+    private boolean importing;
     private final StringProperty labelText = new SimpleStringProperty();
     private final VBox jarSelectionBox;
     private final Button export;
@@ -46,6 +47,11 @@ public class JarSelectionBuilder {
     public void setExportAllowance(Boolean state) {
         exporting = state;
         export.setDisable(!exporting);
+    }
+
+    public void setImportAllowance(Boolean state) {
+        importing = state;
+        selectJar.setDisable(!importing);
     }
 
     public Button getJarSelectButton() {

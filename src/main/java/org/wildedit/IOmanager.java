@@ -26,6 +26,9 @@ public class IOmanager {
         this.fileCollection = fileCollection;
         this.windowBuilder = windowBuilder;
         this.stage = stage;
+
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Java Archive (*.jar)", "*.jar");
+        fileChooser.getExtensionFilters().add(filter);
     }
 
     public void scanJar() throws IOException {
@@ -36,17 +39,20 @@ public class IOmanager {
 
         JarFile jarScanner = new JarFile(file);
         Manifest manifest = new Manifest(jarScanner.getManifest());
-        boolean validJar = false;
+        boolean validVersion = false;
+        boolean validMainClass = manifest.getMainAttributes().getValue("Main-Class").equals("net.minecraft.client.Minecraft");
 
         for (String value : implementationVersions) {
             if (value.equals(manifest.getMainAttributes().getValue("Implementation-Version"))) {
-                validJar = true;
+                validVersion = true;
                 break;
             }
         }
 
-        if (validJar) { // Need to only allow jars. Currently non-jars can be selected as well
+        if (validMainClass && validVersion) {
             windowBuilder.getJarSelectionBuilder().setImportButtonText("Jar: " + file.getName());
+            windowBuilder.getJarSelectionBuilder().setExportAllowance(true);
+            windowBuilder.getJarSelectionBuilder().setImportAllowance(false);
 
             for (Enumeration<JarEntry> enumStructure = jarScanner.entries(); enumStructure.hasMoreElements(); ) {
                 JarEntry entry = enumStructure.nextElement();
@@ -59,7 +65,7 @@ public class IOmanager {
             }
             jarScanner.close();
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Invalid jar, ensure the selected jar is BTA"); //alternate text of: "Last I checked that ain't BTA"
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Invalid jar, ensure the selected jar is BTA"); //alternate text of: "Last I checked that ain't BTA"
             alert.showAndWait();
         }
     }

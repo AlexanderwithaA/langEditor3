@@ -34,7 +34,6 @@ public class LangEditor extends Application {
         windowBuilder.getJarSelectionBuilder().getJarSelectButton().setOnAction(e -> {
             try {
                 iOmanager.scanJar();
-                windowBuilder.getJarSelectionBuilder().setExportAllowance(true);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
