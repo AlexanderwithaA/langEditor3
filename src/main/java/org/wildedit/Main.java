@@ -6,14 +6,6 @@ public class Main {
     }
 }
 
-// todo... reinforce jar picker, ie:
-// x prevent picking of non jar files
-// x improve filtering for bta jars
-// x determine what proper action is when previously a jar was selected and a new jar is selected (prompt to save and clear?
-// prevent such action? do older jars have translation keys that may want to be used to make multi-version language packs?)
-// x fix export being allowed after selecting non-bta jar (warning occurs, yet exporting becomes enabled)
-// x make invalid jar warning not have a cancel option (why does it even have that?)
-
 // todo... improve window layout
 // it looks ass
 // RELATED: improve how I create the items (textfields, labels, etc) populating the editing window
@@ -35,9 +27,11 @@ public class Main {
 // preview window (would be neat if I could hook into the provided game jar to use the native thing for this!)
 // organize source code better? Is it sensible?
 
+// vvv remaining tasks are all for an export dialog overhaul! vvv
+
 // todo... fix locales
-// -use intermediate file path replacing any locale wherever a pack is still in development
-// in the fileCollection mostly?
+// x -use intermediate file path replacing any locale wherever a pack is still in development
+// x in the fileCollection mostly?
 // make the region picker use locales.
 
 // todo... optional id in export

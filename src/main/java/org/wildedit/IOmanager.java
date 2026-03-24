@@ -58,10 +58,11 @@ public class IOmanager {
                 JarEntry entry = enumStructure.nextElement();
                 if (entry.getName().endsWith(".lang")) { // Removed the ability to edit the splashes as that does nothing atm  || entry.getName().endsWith("splashes.txt")
                     BufferedReader inputReader = new BufferedReader(new InputStreamReader(jarScanner.getInputStream(entry)));
-                    String entryName = entry.getName();
 
-                    fileCollection.addFile(entry.getName(), inputReader);
-                    Button newButton = windowBuilder.newFileSelectButton(entry.getName());
+                    //Strip out locale data and lang path, readd it later!
+                    String strippedPath = entry.getName().substring(entry.getName().indexOf("/",entry.getName().indexOf("/") + 1));
+                    fileCollection.addFile(strippedPath, inputReader);
+                    Button newButton = windowBuilder.newFileSelectButton(strippedPath);
                     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> windowBuilder.loadFileContents(newButton.getId()));
                 }
             }

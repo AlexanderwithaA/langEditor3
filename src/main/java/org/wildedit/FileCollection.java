@@ -63,7 +63,7 @@ public class FileCollection {
             //pack byte stream into zip
 
             inputStream = new ByteArrayInputStream(stringBytes);
-            zipEntry = new ZipEntry(path);
+            zipEntry = new ZipEntry("lang/" + manifest[2] + path); // changed the en_US to a variable gotten from export
             zipOS.putNextEntry(zipEntry);
 
             while ((data = inputStream.read(bytes)) >= 0) {
