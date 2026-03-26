@@ -3,13 +3,12 @@ package org.wildedit.windowComponents;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ExportDialog extends Dialog<String[]> {
     private final ButtonType saveButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
@@ -23,54 +22,51 @@ public class ExportDialog extends Dialog<String[]> {
 
         // dialog contents
         StackPane contentPane = new StackPane();
-        VBox vbox = new VBox();
+        contentPane.setPrefSize(512, 384);
 
-        contentPane.setPrefSize(300, 200);
+        TextField langPackTitle = new TextField();
+        TextField langPackID = new TextField();
+        ComboBox<String> languageCombox = new ComboBox<>();
+        ComboBox<String> countryCombox = new ComboBox<>();
+        ListView<String> credits = new ListView<>();
 
-        TextField title = new TextField();
-        TextField identifier = new TextField();
-        TextField regionCode = new TextField();
-        TextField credits = new TextField();
-
-        //I should get a region code picker. Also, this does not determine the file path of the language pack atm, which is an issue, probably.
-        regionCode.setPromptText("en_US, ru_RU, zn_CH...");
-        identifier.setPromptText("my_language_pack");
-        credits.setPromptText("Comma separated list");
-
-        GridPane gridpane = new GridPane();
-        gridpane.add(new Label("Title"), 0,0);
-        gridpane.add(new Label("ID"), 0,1);
-        gridpane.add(new Label("Region"), 0,2);
-        gridpane.add(new Label("Credits"), 0,3);
-        gridpane.add(title, 1,0);
-        gridpane.add(identifier,1,1);
-        gridpane.add(regionCode,1,2);
-        gridpane.add(credits,1,3);
-
-        gridpane.setVgap(5);
-        gridpane.setHgap(5);
+        languageCombox.getItems().addAll(Locale.getISOLanguages());
+        countryCombox.getItems().addAll(Locale.getISOCountries());
 
         Button locationPicker = new Button();
         locationPicker.textProperty().bind(labelText);
         labelText.set("No export location Selected...");
 
-        vbox.getChildren().addAll(gridpane,locationPicker);
+        //gridpane containing all the elements
+        GridPane gridpane = new GridPane(5,5);
+        gridpane.add(new Label("Title"), 0,0);
+        gridpane.add(new Label("ID"), 0,1);
+        gridpane.add(new Label("Locale"), 0,2);
+        gridpane.add(new Label("Credits"), 0,3);
+        gridpane.add(langPackTitle, 1,0);
+        gridpane.add(langPackID,1,1);
+        gridpane.add(languageCombox,1,2);
+        gridpane.add(countryCombox,2,2);
+        gridpane.add(credits,1,3);
+        gridpane.add(locationPicker,0,4);
 
-        contentPane.getChildren().addAll(vbox);
+        //gridpane.prefWidthProperty().bind(contentPane.widthProperty());
+        GridPane.setHgrow(gridpane, Priority.ALWAYS);
+        GridPane.setFillWidth(gridpane,true);
+        gridpane.gridLinesVisibleProperty().set(true);
+
+        GridPane.setColumnSpan(locationPicker, GridPane.REMAINING);
+        GridPane.setColumnSpan(langPackTitle, 2);
+        GridPane.setColumnSpan(langPackID, 2);
+        GridPane.setColumnSpan(credits, 2);
+
+        contentPane.getChildren().addAll(gridpane);
         getDialogPane().setContent(contentPane);
 
         // Add buttons to the dialog
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
-
-        title.textProperty().addListener((e) -> checkArray[0] = !title.getCharacters().isEmpty());
-
-        identifier.textProperty().addListener((e) -> checkArray[1] = !identifier.getCharacters().isEmpty());
-
-        regionCode.textProperty().addListener((e) -> checkArray[2] = !regionCode.getCharacters().isEmpty());
-
-        credits.textProperty().addListener((e) -> checkArray[3] = !credits.getCharacters().isEmpty());
-
+        //actions
         locationPicker.setOnAction(e -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             exportLocation = directoryChooser.showDialog(null).getPath(); // I mean, in the docs it says, "If the owner window for the
@@ -98,7 +94,7 @@ public class ExportDialog extends Dialog<String[]> {
 
                 if(Arrays.equals(checkArray, new boolean[]{true, true, true, true, true})) {
                     // pack inputs into array on save, zip gets made after this
-                    return new String[]{title.getCharacters().toString(),identifier.getCharacters().toString(),regionCode.getCharacters().toString(),credits.getCharacters().toString(), exportLocation};
+                    return new String[]{"empty","empty","empty","empty"};//String[]{title.getCharacters().toString(),identifier.getCharacters().toString(), "localeCombox.getCharacters().toString()",credits.getCharacters().toString(), exportLocation};
                 } else {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All fields must be filled!");
                     alert.showAndWait();
