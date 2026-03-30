@@ -2,6 +2,7 @@ package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
@@ -21,14 +22,22 @@ public class ExportDialog extends Dialog<String[]> {
         setTitle("Configure Manifest");
 
         // dialog contents
-        StackPane contentPane = new StackPane();
-        contentPane.setPrefSize(512, 384);
+        VBox contents = new VBox();
+        contents.setPrefSize(512, 384);
+        contents.setSpacing(8);
+        contents.setAlignment(Pos.CENTER);
 
         TextField langPackTitle = new TextField();
+        langPackTitle.prefWidthProperty().bind(contents.widthProperty());
         TextField langPackID = new TextField();
         ComboBox<String> languageCombox = new ComboBox<>();
         ComboBox<String> countryCombox = new ComboBox<>();
         ListView<String> credits = new ListView<>();
+
+//        languageCombox.setEditable(true);
+//        languageCombox.setOnAction(e -> {
+//            String selectedItem = languageCombox.getSelectionModel().getSelectedItem();
+//        });
 
         languageCombox.getItems().addAll(Locale.getISOLanguages());
         countryCombox.getItems().addAll(Locale.getISOCountries());
@@ -48,20 +57,13 @@ public class ExportDialog extends Dialog<String[]> {
         gridpane.add(languageCombox,1,2);
         gridpane.add(countryCombox,2,2);
         gridpane.add(credits,1,3);
-        gridpane.add(locationPicker,0,4);
 
-        //gridpane.prefWidthProperty().bind(contentPane.widthProperty());
-        GridPane.setHgrow(gridpane, Priority.ALWAYS);
-        GridPane.setFillWidth(gridpane,true);
-        gridpane.gridLinesVisibleProperty().set(true);
-
-        GridPane.setColumnSpan(locationPicker, GridPane.REMAINING);
         GridPane.setColumnSpan(langPackTitle, 2);
         GridPane.setColumnSpan(langPackID, 2);
         GridPane.setColumnSpan(credits, 2);
 
-        contentPane.getChildren().addAll(gridpane);
-        getDialogPane().setContent(contentPane);
+        contents.getChildren().addAll(gridpane, locationPicker);
+        getDialogPane().setContent(contents);
 
         // Add buttons to the dialog
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
