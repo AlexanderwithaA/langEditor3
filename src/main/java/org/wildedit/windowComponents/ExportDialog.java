@@ -2,10 +2,16 @@ package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
+import org.controlsfx.control.SearchableComboBox;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.Arrays;
@@ -17,6 +23,7 @@ public class ExportDialog extends Dialog<String[]> {
     private final boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
     private String exportLocation;
     private final StringProperty labelText = new SimpleStringProperty();
+    private final ObservableList<TextField> creditsList = FXCollections.observableArrayList();
 
     public ExportDialog() {
         setTitle("Configure Manifest");
@@ -30,9 +37,9 @@ public class ExportDialog extends Dialog<String[]> {
         TextField langPackTitle = new TextField();
         langPackTitle.prefWidthProperty().bind(contents.widthProperty());
         TextField langPackID = new TextField();
-        ComboBox<String> languageCombox = new ComboBox<>();
-        ComboBox<String> countryCombox = new ComboBox<>();
-        ListView<String> credits = new ListView<>();
+        SearchableComboBox<String> languageCombox = new SearchableComboBox<>();
+        SearchableComboBox<String> countryCombox = new SearchableComboBox<>();
+        ListView<TextField> credits = new ListView<>(creditsList);
 
 //        languageCombox.setEditable(true);
 //        languageCombox.setOnAction(e -> {
@@ -50,13 +57,15 @@ public class ExportDialog extends Dialog<String[]> {
         GridPane gridpane = new GridPane(5,5);
         gridpane.add(new Label("Title"), 0,0);
         gridpane.add(new Label("ID"), 0,1);
-        gridpane.add(new Label("Locale"), 0,2);
-        gridpane.add(new Label("Credits"), 0,3);
+        gridpane.add(new Label("Locale"), 0,3);
+        gridpane.add(new Label("Credits"), 0,4);
         gridpane.add(langPackTitle, 1,0);
         gridpane.add(langPackID,1,1);
-        gridpane.add(languageCombox,1,2);
-        gridpane.add(countryCombox,2,2);
-        gridpane.add(credits,1,3);
+        gridpane.add(new Label("Language Code"), 1,2);
+        gridpane.add(new Label("Region Code"), 2,2);
+        gridpane.add(languageCombox,1,3);
+        gridpane.add(countryCombox,2,3);
+        gridpane.add(credits,1,4);
 
         GridPane.setColumnSpan(langPackTitle, 2);
         GridPane.setColumnSpan(langPackID, 2);
@@ -89,6 +98,15 @@ public class ExportDialog extends Dialog<String[]> {
             }
         });
 
+        //social credit go up! (credits list management)
+        increaseCredits();
+        creditsList.addListener(new ListChangeListener<TextField>() {
+            @Override
+            public void onChanged(Change<? extends TextField> change) {
+                //increaseCredits();
+            }
+        });
+
         // Set the result converter
         setResultConverter(buttonType -> {
 
@@ -106,5 +124,11 @@ public class ExportDialog extends Dialog<String[]> {
             // just do nothing ig
             return null;
         });
+    }
+
+    private void increaseCredits() {
+        TextField textField = new TextField();
+        textField.setPromptText("Add Person");
+        creditsList.add(textField);
     }
 }
