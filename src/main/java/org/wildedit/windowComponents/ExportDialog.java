@@ -2,10 +2,14 @@ package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -23,7 +27,7 @@ public class ExportDialog extends Dialog<String[]> {
     private final boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
     private String exportLocation;
     private final StringProperty labelText = new SimpleStringProperty();
-    private final ObservableList<TextField> creditsList = FXCollections.observableArrayList();
+    private boolean userIdInput = false;
 
     public ExportDialog() {
         setTitle("Configure Manifest");
@@ -39,12 +43,10 @@ public class ExportDialog extends Dialog<String[]> {
         TextField langPackID = new TextField();
         SearchableComboBox<String> languageCombox = new SearchableComboBox<>();
         SearchableComboBox<String> countryCombox = new SearchableComboBox<>();
-        ListView<TextField> credits = new ListView<>(creditsList);
-
-//        languageCombox.setEditable(true);
-//        languageCombox.setOnAction(e -> {
-//            String selectedItem = languageCombox.getSelectionModel().getSelectedItem();
-//        });
+//        ListView<TextField> credits = new ListView<>(creditsList);
+        TextArea credits = new TextArea();
+        credits.promptTextProperty().set("One contributer per line...");
+        credits.wrapTextProperty().set(false);
 
         languageCombox.getItems().addAll(Locale.getISOLanguages());
         countryCombox.getItems().addAll(Locale.getISOCountries());
@@ -98,12 +100,41 @@ public class ExportDialog extends Dialog<String[]> {
             }
         });
 
-        //social credit go up! (credits list management)
-        increaseCredits();
-        creditsList.addListener(new ListChangeListener<TextField>() {
-            @Override
-            public void onChanged(Change<? extends TextField> change) {
-                //increaseCredits();
+//        //social credit go up! (credits list management)
+//        increaseCredits();
+//        credits.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TextField>() {
+//            @Override
+//            public void changed(ObservableValue<? extends TextField> observableValue, TextField textField, TextField t1) {
+//                if(t1.getCharacters().isEmpty() && creditsList.size() > 1) {
+//                    creditsList.remove(t1);
+//                } else if(!t1.getCharacters().isEmpty() && textField.getCharacters().isEmpty()) {
+//                    increaseCredits();
+//                }
+//            }
+//        });
+
+        langPackTitle.textProperty().addListener((observable, oldValue, newValue) -> {
+            String parsedTitle = langPackTitle.getText().replaceAll("[^a-zA-Z0-9.\\-]", "_").toLowerCase();
+            if (parsedTitle.length() >= 127) {
+                parsedTitle = parsedTitle.substring(0,128);
+            }
+            if (langPackID.getText().isEmpty() || !userIdInput) {
+                userIdInput = false;
+                langPackID.setText(parsedTitle);
+            }
+        });
+
+        langPackID.textProperty().addListener((observable, oldValue, newValue) -> {
+            String parsedTitle = langPackTitle.getText().replaceAll("[^a-zA-Z0-9.\\-]", "_").toLowerCase();
+            if (parsedTitle.length() >= 127) {
+                parsedTitle = parsedTitle.substring(0,128);
+            }
+            if (langPackID.isFocused()) {
+                userIdInput = true;
+                System.out.println("eyo");
+            } else if (langPackID.getText().isEmpty()){ //todo bind to focused property instead stupid
+                userIdInput = false;
+                langPackID.setText(parsedTitle);
             }
         });
 
@@ -126,9 +157,9 @@ public class ExportDialog extends Dialog<String[]> {
         });
     }
 
-    private void increaseCredits() {
-        TextField textField = new TextField();
-        textField.setPromptText("Add Person");
-        creditsList.add(textField);
-    }
+//    private void increaseCredits() {
+//        TextField textField = new TextField();
+//        textField.setPromptText("Add Person");
+//        creditsList.add(textField);
+//    }
 }
