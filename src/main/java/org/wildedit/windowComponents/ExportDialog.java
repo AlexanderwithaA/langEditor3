@@ -24,9 +24,8 @@ import java.util.Locale;
 public class ExportDialog extends Dialog<String[]> {
     private final ButtonType saveButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
     private final ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-    private final boolean[] checkArray = {false,false,false,false,false}; // this method sucks and I haven't even completed it yet
-    private String exportLocation;
     private final StringProperty labelText = new SimpleStringProperty();
+    private String exportLocation;
     private boolean userIdInput = false;
 
     public ExportDialog() {
@@ -89,29 +88,14 @@ public class ExportDialog extends Dialog<String[]> {
             exportLocation = exportLocation.replace("\\","/");
             if (!new File(exportLocation).exists()) {
                 labelText.set("Invalid Location: " + exportLocation);
-                checkArray[4] = false;
             } else {
                 labelText.set("Export Location: " + exportLocation);
-                checkArray[4] = true;
             }
 
             if(!exportLocation.endsWith("/")) {
                 exportLocation = exportLocation + "/";
             }
         });
-
-//        //social credit go up! (credits list management)
-//        increaseCredits();
-//        credits.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TextField>() {
-//            @Override
-//            public void changed(ObservableValue<? extends TextField> observableValue, TextField textField, TextField t1) {
-//                if(t1.getCharacters().isEmpty() && creditsList.size() > 1) {
-//                    creditsList.remove(t1);
-//                } else if(!t1.getCharacters().isEmpty() && textField.getCharacters().isEmpty()) {
-//                    increaseCredits();
-//                }
-//            }
-//        });
 
         langPackTitle.textProperty().addListener((observable, oldValue, newValue) -> {
             String parsedTitle = langPackTitle.getText().replaceAll("[^a-zA-Z0-9.\\-]", "_").toLowerCase();
@@ -124,7 +108,7 @@ public class ExportDialog extends Dialog<String[]> {
             }
         });
 
-        langPackID.textProperty().addListener((observable, oldValue, newValue) -> {
+        langPackID.focusedProperty().addListener((observable, oldValue, newValue) -> {
             String parsedTitle = langPackTitle.getText().replaceAll("[^a-zA-Z0-9.\\-]", "_").toLowerCase();
             if (parsedTitle.length() >= 127) {
                 parsedTitle = parsedTitle.substring(0,128);
@@ -132,7 +116,7 @@ public class ExportDialog extends Dialog<String[]> {
             if (langPackID.isFocused()) {
                 userIdInput = true;
                 System.out.println("eyo");
-            } else if (langPackID.getText().isEmpty()){ //todo bind to focused property instead stupid
+            } else if (langPackID.getText().isEmpty()){ //binded to focused property, idc if something here is useless now
                 userIdInput = false;
                 langPackID.setText(parsedTitle);
             }
@@ -143,23 +127,22 @@ public class ExportDialog extends Dialog<String[]> {
 
             if (buttonType == saveButtonType) {
 
-                if(Arrays.equals(checkArray, new boolean[]{true, true, true, true, true})) {
+                if(!exportLocation.isBlank() && !langPackTitle.getText().isBlank() && !langPackID.getText().isBlank() && !credits.getText().isBlank() && !languageCombox.getSelectionModel().getSelectedItem().isBlank() && !countryCombox.getSelectionModel().getSelectedItem().isBlank()) {
+                    String[] manifest = new String[6];
+                    manifest[0] = langPackTitle.getText();
+                    manifest[1] = langPackID.getText();
+                    manifest[2] = languageCombox.getValue() + "_" + countryCombox.getValue();
+                    manifest[3] = credits.getText();
+                    manifest[4] = exportLocation;
                     // pack inputs into array on save, zip gets made after this
-                    return new String[]{"empty","empty","empty","empty"};//String[]{title.getCharacters().toString(),identifier.getCharacters().toString(), "localeCombox.getCharacters().toString()",credits.getCharacters().toString(), exportLocation};
+                    return manifest;
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All fields must be filled!");
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "All fields must be filled!");
                     alert.showAndWait();
-                    System.out.println(Arrays.toString(checkArray));
                 }
             }
             // just do nothing ig
             return null;
         });
     }
-
-//    private void increaseCredits() {
-//        TextField textField = new TextField();
-//        textField.setPromptText("Add Person");
-//        creditsList.add(textField);
-//    }
 }
