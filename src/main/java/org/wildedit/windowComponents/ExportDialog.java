@@ -2,23 +2,13 @@ package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import org.controlsfx.control.SearchableComboBox;
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class ExportDialog extends Dialog<String[]> {
@@ -127,7 +117,7 @@ public class ExportDialog extends Dialog<String[]> {
 
             if (buttonType == saveButtonType) {
 
-                if(!exportLocation.isBlank() && !langPackTitle.getText().isBlank() && !langPackID.getText().isBlank() && !credits.getText().isBlank() && !languageCombox.getSelectionModel().getSelectedItem().isBlank() && !countryCombox.getSelectionModel().getSelectedItem().isBlank()) {
+                if(exportLocation != null && !langPackTitle.getText().isBlank() && !langPackID.getText().isBlank() && !credits.getText().isBlank() && !languageCombox.getSelectionModel().getSelectedItem().isBlank() && !countryCombox.getSelectionModel().getSelectedItem().isBlank()) {
                     String[] manifest = new String[6];
                     manifest[0] = langPackTitle.getText();
                     manifest[1] = langPackID.getText();

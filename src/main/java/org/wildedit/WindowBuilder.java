@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.wildedit.lineItem.LineItemContainerReturn;
+import org.wildedit.lineItem.LineItemType;
 import org.wildedit.windowComponents.ExportDialog;
 import org.wildedit.windowComponents.JarSelectionBuilder;
 

@@ -1,4 +1,4 @@
-package org.wildedit;
+package org.wildedit.lineItem;
 
 public class UnknownLineItem implements LineItemType{
 

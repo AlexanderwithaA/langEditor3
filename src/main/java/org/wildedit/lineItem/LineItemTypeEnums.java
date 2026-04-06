@@ -1,4 +1,4 @@
-package org.wildedit;
+package org.wildedit.lineItem;
 
 public enum LineItemTypeEnums {
     LINE_ITEM,

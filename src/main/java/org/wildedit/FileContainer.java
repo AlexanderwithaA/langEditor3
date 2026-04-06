@@ -1,5 +1,7 @@
 package org.wildedit;
 
+import org.wildedit.lineItem.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,9 +47,10 @@ public class FileContainer {
                 String key = "";
                 String value;
 
-                if(line.split("=", 2)[0].equals(line.split("=", 2)[0].toLowerCase())) {
+                //where the key gets defined (I'm having to relearn this rn) if key == lowercase key.... huh? was I on crack?
+                //if(line.split("=", 2)[0].equals(line.split("=", 2)[0].toLowerCase())) {
                     key = line.split("=", 2)[0];
-                }
+                //}
 
                 if(line.split("=", 2).length > 1) {
                     value = line.split("=", 2)[1];
