@@ -2,6 +2,7 @@ package org.wildedit.windowComponents;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -105,10 +106,25 @@ public class ExportDialog extends Dialog<String[]> {
             }
             if (langPackID.isFocused()) {
                 userIdInput = true;
-                System.out.println("eyo");
             } else if (langPackID.getText().isEmpty()){ //binded to focused property, idc if something here is useless now
                 userIdInput = false;
                 langPackID.setText(parsedTitle);
+            }
+        });
+
+        //evil listener that edits the text YOU type as YOU type it >:)
+        langPackID.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (userIdInput) {
+                langPackID.setText(langPackID.getText().replaceAll("[^a-zA-Z0-9.\\-]", "_").toLowerCase());
+            }
+        });
+
+        final Button confirmButton = (Button) getDialogPane().lookupButton(saveButtonType);
+        confirmButton.addEventFilter(ActionEvent.ACTION, e -> {
+            if (!(exportLocation != null && !langPackTitle.getText().isBlank() && !langPackID.getText().isBlank() && !credits.getText().isBlank() && !languageCombox.getSelectionModel().getSelectedItem().isBlank() && !countryCombox.getSelectionModel().getSelectedItem().isBlank())) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "All fields must be filled!");
+                alert.showAndWait();
+                e.consume();
             }
         });
 
@@ -116,20 +132,14 @@ public class ExportDialog extends Dialog<String[]> {
         setResultConverter(buttonType -> {
 
             if (buttonType == saveButtonType) {
-
-                if(exportLocation != null && !langPackTitle.getText().isBlank() && !langPackID.getText().isBlank() && !credits.getText().isBlank() && !languageCombox.getSelectionModel().getSelectedItem().isBlank() && !countryCombox.getSelectionModel().getSelectedItem().isBlank()) {
-                    String[] manifest = new String[6];
-                    manifest[0] = langPackTitle.getText();
-                    manifest[1] = langPackID.getText();
-                    manifest[2] = languageCombox.getValue() + "_" + countryCombox.getValue();
-                    manifest[3] = credits.getText();
-                    manifest[4] = exportLocation;
-                    // pack inputs into array on save, zip gets made after this
-                    return manifest;
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "All fields must be filled!");
-                    alert.showAndWait();
-                }
+                String[] manifest = new String[6];
+                manifest[0] = langPackTitle.getText();
+                manifest[1] = langPackID.getText();
+                manifest[2] = languageCombox.getValue() + "_" + countryCombox.getValue();
+                manifest[3] = credits.getText();
+                manifest[4] = exportLocation;
+                // pack inputs into array on save, zip gets made after this
+                return manifest;
             }
             // just do nothing ig
             return null;
