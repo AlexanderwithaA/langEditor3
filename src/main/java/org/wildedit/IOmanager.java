@@ -2,14 +2,13 @@ package org.wildedit;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -71,5 +70,28 @@ public class IOmanager {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Invalid jar, ensure the selected jar is BTA"); //alternate text of: "Last I checked that ain't BTA"
             alert.showAndWait();
         }
+    }
+
+    public static VBox scanTxt(InputStream txtFile) throws IOException {
+        VBox textBlock = new VBox(5);
+        textBlock.setPrefWidth(512);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(txtFile));
+
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            Label label = new Label();
+            if (line.startsWith("\\")) {
+                switch (line.charAt(1)) {
+                    case 'b':
+                        label.setStyle("-fx-font-weight: bold;");
+                    default:
+                }
+                label.setText(line.substring(line.indexOf(" ") + 1));
+            } else {
+                label.setText(line);
+            }
+            label.setWrapText(true);
+            textBlock.getChildren().add(label);
+        }
+        return textBlock;
     }
 }

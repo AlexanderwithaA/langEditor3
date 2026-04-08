@@ -14,6 +14,7 @@ import org.wildedit.lineItem.LineItemType;
 import org.wildedit.windowComponents.ExportDialog;
 import org.wildedit.windowComponents.JarSelectionBuilder;
 
+import java.io.IOException;
 import java.util.Optional;
 
 // This class's purpose is to separate all the logic of this program from the UI. Mainly to clean up the main class
@@ -38,14 +39,23 @@ public class WindowBuilder {
         MenuItem about = new MenuItem("About");
         helpMenu.getItems().addAll(basicUsage,about);
 
-        StringBuilder basicUsageText = new StringBuilder();
-        basicUsageText.append("The purpose of this program is to improve the process of creating Language Packs for the Minecraft Beta 1.7.3 jarmod Better Than Adventure! The following is instructions for basic usage:");
-        basicUsageText.append("\n");
-        basicUsageText.append("1. Select the BTA jar to scan in the language information.");
+//        StringBuilder basicUsageText = new StringBuilder();
+//        basicUsageText.append("The purpose of this program is to improve the process of creating Language Packs for the Minecraft Beta 1.7.3 jarmod Better Than Adventure! The following is instructions for basic usage:");
+//        basicUsageText.append("\n");
+//        basicUsageText.append("1. Select the BTA jar to scan in the language information.");
 
         basicUsage.addEventHandler(ActionEvent.ACTION,event -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, basicUsageText.toString());
-            alert.showAndWait();
+            ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            Dialog<String> dialog = new Dialog<>();
+            try {
+                dialog.getDialogPane().setContent(IOmanager.scanTxt(getClass().getClassLoader().getResourceAsStream("help-basicusage")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            dialog.resizableProperty().setValue(true);
+            dialog.getDialogPane().getButtonTypes().addAll(ok);
+            dialog.show();
         });
 
         return new MenuBar(fileMenu, editMenu, helpMenu);
