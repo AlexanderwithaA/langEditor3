@@ -31,8 +31,6 @@ public class FileContainer {
         while(input.ready()) {
             String line = input.readLine();
 
-            //System.out.println(line);
-
             if(line.isBlank()) {
                 fileContents.add(new BlankLineItem());
                 continue;

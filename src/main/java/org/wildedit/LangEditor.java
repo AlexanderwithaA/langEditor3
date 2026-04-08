@@ -7,14 +7,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Optional;
 
-//main should contain only boilerplate and logic related code, javafx window building, and IO (ie jar scanning) should be done in other classes
+//main (this) should contain only boilerplate and logic related code, javafx window building, and IO (ie jar scanning) should be done in other classes
 public class LangEditor extends Application {
 
     private Stage primaryStage;
     private final FileCollection fileCollection = new FileCollection();
     private final WindowBuilder windowBuilder = new WindowBuilder(fileCollection);
     private final IOmanager iOmanager = new IOmanager(fileCollection, windowBuilder, primaryStage);
-    //private String[] manifest;
 
     public static void main(String[] args) {
         launch(args);

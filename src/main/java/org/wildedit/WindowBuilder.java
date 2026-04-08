@@ -2,9 +2,11 @@ package org.wildedit;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.wildedit.lineItem.LineItemContainerReturn;
@@ -30,6 +32,22 @@ public class WindowBuilder {
         Menu fileMenu = new Menu("File");
         Menu editMenu = new Menu("Edit");
         Menu helpMenu = new Menu("Help");
+
+        //help item
+        MenuItem basicUsage = new MenuItem("Basic Usage");
+        MenuItem about = new MenuItem("About");
+        helpMenu.getItems().addAll(basicUsage,about);
+
+        StringBuilder basicUsageText = new StringBuilder();
+        basicUsageText.append("The purpose of this program is to improve the process of creating Language Packs for the Minecraft Beta 1.7.3 jarmod Better Than Adventure! The following is instructions for basic usage:");
+        basicUsageText.append("\n");
+        basicUsageText.append("1. Select the BTA jar to scan in the language information.");
+
+        basicUsage.addEventHandler(ActionEvent.ACTION,event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, basicUsageText.toString());
+            alert.showAndWait();
+        });
+
         return new MenuBar(fileMenu, editMenu, helpMenu);
     }
 
@@ -40,9 +58,8 @@ public class WindowBuilder {
         ListView<Button> fileList = new ListView<>(fileSelectionPane);
         VBox selectorContainer = new VBox(fileList, builder.getJarSelectionBox());
         SplitPane workspace = new SplitPane(selectorContainer, contentsPane);
-        VBox root = new VBox(workspace);
+        VBox root = new VBox(menuBarBuilder(),workspace);
         // yeah, I removed the menubar, no, it didn't have a purpose yet.
-        // menuBarBuilder(),
 
         // style the above components
         VBox.setVgrow(fileList, Priority.ALWAYS);
@@ -68,6 +85,7 @@ public class WindowBuilder {
     }
 
     //read the data from a file and create the correlating components on screen
+    //the ID getting thrown all over the place is the file path
     public void loadFileContents(String id) {
         VBox vbox = new VBox();
         VBox.setVgrow(vbox, Priority.ALWAYS);
