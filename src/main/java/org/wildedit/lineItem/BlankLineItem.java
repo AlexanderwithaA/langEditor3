@@ -10,6 +10,8 @@ public class BlankLineItem implements LineItemType, LineItemContainerReturn {
         return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
+    public Boolean areYouFilled() {return false;}
+
     public HBox getContainer() {
         return new HBox();
     }

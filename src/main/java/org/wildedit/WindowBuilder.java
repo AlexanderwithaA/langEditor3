@@ -22,6 +22,7 @@ public class WindowBuilder {
     private final ObservableList<Button> fileSelectionPane = FXCollections.observableArrayList();
     private final ScrollPane contentsPane = new ScrollPane();
     private final FileCollection fileCollection;
+    private boolean showFilledLineItems = true;
     JarSelectionBuilder builder;
 
     public WindowBuilder(FileCollection fileCollection) {
@@ -34,15 +35,33 @@ public class WindowBuilder {
         Menu editMenu = new Menu("Edit");
         Menu helpMenu = new Menu("Help");
 
+        //file item
+        MenuItem scan =  new MenuItem("Scan Jar");
+        MenuItem exportLangPack = new MenuItem("Export Language Pack");
+        MenuItem importLangPack = new MenuItem("Import Language Pack");
+        MenuItem pullJar = new MenuItem("Sync With Jar");
+        MenuItem quit = new MenuItem("Quit");
+        fileMenu.getItems().addAll(scan, exportLangPack, new SeparatorMenuItem(), importLangPack, pullJar, new SeparatorMenuItem(), quit);
+
+        //edit item
+        CheckMenuItem showFilled =  new CheckMenuItem("Show Filled Strings");
+        showFilled.setSelected(true);
+        editMenu.getItems().addAll(showFilled);
+
         //help item
         MenuItem basicUsage = new MenuItem("Basic Usage");
         MenuItem about = new MenuItem("About");
         helpMenu.getItems().addAll(basicUsage,about);
 
-//        StringBuilder basicUsageText = new StringBuilder();
-//        basicUsageText.append("The purpose of this program is to improve the process of creating Language Packs for the Minecraft Beta 1.7.3 jarmod Better Than Adventure! The following is instructions for basic usage:");
-//        basicUsageText.append("\n");
-//        basicUsageText.append("1. Select the BTA jar to scan in the language information.");
+
+
+        scan.addEventHandler(ActionEvent.ACTION,event -> {
+            builder.getJarSelectButton().fire();
+        });
+
+        exportLangPack.addEventHandler(ActionEvent.ACTION,event -> {
+            builder.getJarExportButton().fire();
+        });
 
         basicUsage.addEventHandler(ActionEvent.ACTION,event -> {
             ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -56,6 +75,15 @@ public class WindowBuilder {
             dialog.resizableProperty().setValue(true);
             dialog.getDialogPane().getButtonTypes().addAll(ok);
             dialog.show();
+        });
+
+        quit.addEventHandler(ActionEvent.ACTION,event -> {
+            System.exit(0);
+        });
+
+        showFilled.addEventHandler(ActionEvent.ACTION,event -> {
+            showFilledLineItems = showFilled.selectedProperty().get();
+            loadFileContents(contentsPane.getContent().getId());
         });
 
         return new MenuBar(fileMenu, editMenu, helpMenu);
@@ -98,19 +126,22 @@ public class WindowBuilder {
     //the ID getting thrown all over the place is the file path
     public void loadFileContents(String id) {
         VBox vbox = new VBox();
+        vbox.setId(id);
         VBox.setVgrow(vbox, Priority.ALWAYS);
         vbox.setSpacing(5);
         vbox.setAlignment(Pos.CENTER);
 
         for(int i = 0; i < fileCollection.getFile(id).getFileLength(); i++) {
-            Object item = fileCollection.getFile(id).passLineItemObject(i);
+            if (showFilledLineItems || !fileCollection.getFile(id).lineItemModificationState(i)) {
+                Object item = fileCollection.getFile(id).passLineItemObject(i);
 
-            if (item instanceof LineItemType && item instanceof LineItemContainerReturn) {
-                vbox.getChildren().add(((LineItemContainerReturn) item).getContainer());
-            }
+                if (item instanceof LineItemType && item instanceof LineItemContainerReturn) {
+                    vbox.getChildren().add(((LineItemContainerReturn) item).getContainer());
+                }
 
-            if (i % 2 == 0) { // alternating colors for better visibility
-                vbox.getChildren().getLast().setStyle("-fx-background-color: rgb(235, 235, 235);");
+                if (i % 2 == 0) { // alternating colors for better visibility
+                    vbox.getChildren().getLast().setStyle("-fx-background-color: rgb(235, 235, 235);");
+                }
             }
         }
 

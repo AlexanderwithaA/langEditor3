@@ -83,6 +83,10 @@ public class FileContainer {
         return fileContents.get(index);
     }
 
+    public Boolean lineItemModificationState(int index) {
+        return ((LineItemType) fileContents.get(index)).areYouFilled();
+    }
+
     public boolean areYouModified() {
         for (Object item : fileContents) {
             if (item instanceof LineItemType) {

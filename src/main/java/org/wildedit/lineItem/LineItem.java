@@ -19,6 +19,8 @@ public class LineItem implements LineItemType, LineItemContainerReturn {
         return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
+    public Boolean areYouFilled() {return contents != null;}
+
     public String getOldContents() {
         return oldContents;
     }

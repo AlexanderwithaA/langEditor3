@@ -19,6 +19,8 @@ public class CommentedLineItem implements LineItemType, LineItemContainerReturn 
         return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
+    public Boolean areYouFilled() {return false;}
+
     public String getContents() {
         return contents;
     }

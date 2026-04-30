@@ -17,11 +17,11 @@ public class Main {
 // -file, help, edit tabs
 // RELATED: implement re-importing language packs and merging with jar to allow updating to newer versions
 // (basically update existing language packs)
+// link all menuitems up...
+// sync, import, filled items...
 
 // todo, misc...
 // does it work on other platforms? (macos)
-// x any memory leaks? (what happens when I "open" and "close" files?) Seemingly no....
-// x make FXwindow main branch
 // cleanup repo
 // hotkeys to format text or a formatting bar
 // preview window (would be neat if I could hook into the provided game jar to use the native thing for this!)

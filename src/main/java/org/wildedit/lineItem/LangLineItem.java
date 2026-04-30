@@ -21,6 +21,8 @@ public class LangLineItem implements LineItemType, LineItemContainerReturn {
         return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
+    public Boolean areYouFilled() {return newValue != null;}
+
     public String getKey() {
         return key;
     }

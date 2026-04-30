@@ -13,6 +13,8 @@ public class UnknownLineItem implements LineItemType{
         return LineItemTypeEnums.valueOf(String.valueOf(type));
     }
 
+    public Boolean areYouFilled() {return false;}
+
     public String getContents() {
         return contents;
     }
